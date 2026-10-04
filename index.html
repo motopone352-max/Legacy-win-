@@ -1,0 +1,2823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>LEGACY WIN - Official Mobile Gaming & Prediction Portal</title>
+  <!-- Tailwind CSS Framework CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Phosphor Icons CDN -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              dark: '#0a0c12',
+              surface: '#121622',
+              card: '#181e2e',
+              cardHover: '#21293e',
+              border: '#262f47',
+              gold: '#f5be38',
+              goldLight: '#ffe58f',
+              goldDark: '#d49514',
+              accentOrange: '#f59e0b',
+              green: '#10b981',
+              red: '#ef4444',
+              violet: '#8b5cf6'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+    
+    body {
+      background-color: #050609;
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    ::-webkit-scrollbar { width: 0px; height: 0px; }
+    
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #fff3a8 0%, #f5be38 45%, #ffd700 75%, #cf8b0a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .gold-gradient-bg {
+      background: linear-gradient(135deg, #ffe58f 0%, #f5be38 45%, #e09e19 100%);
+    }
+
+    .split-red-violet {
+      background: linear-gradient(135deg, #ef4444 50%, #8b5cf6 50%);
+    }
+    
+    .split-green-violet {
+      background: linear-gradient(135deg, #10b981 50%, #8b5cf6 50%);
+    }
+
+    @keyframes pulseGoldGlow {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(245, 190, 56, 0.6)); }
+      50% { transform: scale(1.05); filter: drop-shadow(0 0 16px rgba(245, 190, 56, 0.95)); }
+    }
+    
+    .pulse-gold {
+      animation: pulseGoldGlow 2.2s infinite ease-in-out;
+    }
+
+    @keyframes tickerScroll {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-50%); }
+    }
+    
+    .ticker-scroll-content {
+      animation: tickerScroll 18s linear infinite;
+    }
+    .ticker-scroll-content:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes reelSpin {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-50%); filter: blur(3px); }
+      100% { transform: translateY(0); filter: blur(0); }
+    }
+    .spinning-reel {
+      animation: reelSpin 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  </style>
+</head>
+<body class="flex justify-center items-start min-h-screen bg-[#050609] antialiased">
+
+<!-- MOBILE + PASSWORD LOGIN / REGISTRATION -->
+<style>
+#authGate{position:fixed;inset:0;z-index:99999;background:#0b0b0f;color:#fff;display:flex;align-items:center;justify-content:center;padding:18px;font-family:Arial,sans-serif}
+#authGate .auth-card{width:100%;max-width:430px;background:#15151c;border:1px solid #3a3420;border-radius:22px;padding:24px;box-shadow:0 20px 60px #000}
+#authGate h1{margin:0 0 8px;text-align:center;font-size:28px}
+#authGate .sub{color:#aaa;text-align:center;font-size:14px;margin-bottom:22px}
+#authGate input{width:100%;box-sizing:border-box;background:#0e0e13;color:#fff;border:1px solid #444;border-radius:12px;padding:14px;margin:7px 0;font-size:16px;outline:none}
+#authGate input:focus{border-color:#d4af37}
+#authGate button{width:100%;border:0;border-radius:12px;padding:14px;margin-top:10px;background:linear-gradient(135deg,#f5d76e,#b88918);color:#111;font-weight:700;font-size:16px;cursor:pointer}
+#authGate .secondary{background:#25252e;color:#ddd}
+#authGate .switch{text-align:center;margin-top:18px;color:#aaa;font-size:14px}
+#authGate .switch span{color:#f0c84b;cursor:pointer;font-weight:700}
+#authGate .msg{text-align:center;min-height:20px;margin-top:10px;font-size:13px}
+#authGate .error{color:#ff7777}
+#authGate .success{color:#66e08a}
+#authGate .hidden{display:none!important}
+#authGate .brand{color:#f0c84b}
+</style>
+
+<div id="authGate">
+  <div class="auth-card">
+    <h1><span class="brand">LEGACY WIN</span></h1>
+    <div class="sub" id="authTitle">Login with Mobile Number</div>
+
+    <div id="loginBox">
+      <input id="loginMobile" type="tel" inputmode="numeric" maxlength="10" placeholder="Mobile Number">
+      <input id="loginPassword" type="password" placeholder="Password">
+      <button type="button" id="loginBtn">Login</button>
+      <div id="loginMsg" class="msg"></div>
+      <div class="switch">New user? <span id="showRegister">Create Account</span></div>
+    </div>
+
+    <div id="registerBox" class="hidden">
+      <input id="regMobile" type="tel" inputmode="numeric" maxlength="10" placeholder="Mobile Number">
+      <input id="regPassword" type="password" placeholder="Create Password">
+      <input id="regConfirm" type="password" placeholder="Confirm Password">
+      <button type="button" id="registerBtn">Register</button>
+      <div id="registerMsg" class="msg"></div>
+      <div class="switch">Already registered? <span id="showLogin">Login</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const gate=document.getElementById('authGate');
+  const loginBox=document.getElementById('loginBox');
+  const registerBox=document.getElementById('registerBox');
+  const title=document.getElementById('authTitle');
+
+  function getUsers(){ return JSON.parse(localStorage.getItem('legacyWinUsers') || '{}'); }
+  function saveUsers(u){ localStorage.setItem('legacyWinUsers', JSON.stringify(u)); }
+  function validMobile(v){ return /^[6-9]\d{9}$/.test(v); }
+
+  if(localStorage.getItem('legacyWinLoggedIn') === '1') gate.remove();
+
+  document.getElementById('showRegister').onclick=function(){
+    loginBox.classList.add('hidden');
+    registerBox.classList.remove('hidden');
+    title.textContent='Create New Account';
+  };
+
+  document.getElementById('showLogin').onclick=function(){
+    registerBox.classList.add('hidden');
+    loginBox.classList.remove('hidden');
+    title.textContent='Login with Mobile Number';
+  };
+
+  document.getElementById('registerBtn').onclick=function(){
+    const mobile=document.getElementById('regMobile').value.replace(/\D/g,'');
+    const password=document.getElementById('regPassword').value;
+    const confirm=document.getElementById('regConfirm').value;
+    const msg=document.getElementById('registerMsg');
+
+    if(!validMobile(mobile)){ msg.textContent='Enter a valid 10-digit mobile number.'; msg.className='msg error'; return; }
+    if(password.length < 6){ msg.textContent='Password must be at least 6 characters.'; msg.className='msg error'; return; }
+    if(password !== confirm){ msg.textContent='Passwords do not match.'; msg.className='msg error'; return; }
+
+    const users=getUsers();
+    if(users[mobile]){ msg.textContent='This mobile number is already registered.'; msg.className='msg error'; return; }
+
+    users[mobile]=password;
+    saveUsers(users);
+    msg.textContent='Registration successful. You can login now.';
+    msg.className='msg success';
+
+    setTimeout(function(){
+      document.getElementById('showLogin').click();
+      document.getElementById('loginMobile').value=mobile;
+    },700);
+  };
+
+  document.getElementById('loginBtn').onclick=function(){
+    const mobile=document.getElementById('loginMobile').value.replace(/\D/g,'');
+    const password=document.getElementById('loginPassword').value;
+    const msg=document.getElementById('loginMsg');
+    const users=getUsers();
+
+    if(!validMobile(mobile)){ msg.textContent='Enter a valid 10-digit mobile number.'; msg.className='msg error'; return; }
+    if(!users[mobile] || users[mobile] !== password){
+      msg.textContent='Wrong mobile number or password.';
+      msg.className='msg error';
+      return;
+    }
+
+    localStorage.setItem('legacyWinLoggedIn','1');
+    localStorage.setItem('legacyWinMobile',mobile);
+    gate.remove();
+  };
+})();
+</script>
+
+
+  <!-- Mobile Screen Shell Container (Centered 480px max-width) -->
+  <div class="w-full max-w-[480px] min-h-screen bg-brand-dark flex flex-col relative shadow-2xl border-x border-brand-border/40 overflow-x-hidden pb-20">
+
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-40 bg-brand-dark/95 backdrop-blur-md px-3.5 py-3 flex items-center justify-between border-b border-brand-border/60">
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-2 cursor-pointer" onclick="switchTab('home')">
+        <div class="w-8 h-8 rounded-lg gold-gradient-bg flex items-center justify-center font-black text-slate-950 text-sm shadow-md">
+          LW
+        </div>
+        <div class="leading-tight">
+          <h1 class="text-lg font-black tracking-wider gold-gradient-text uppercase font-sans">LEGACY WIN</h1>
+          <span class="block text-[8px] text-amber-300 font-extrabold tracking-widest uppercase -mt-0.5">VIP Gaming Official</span>
+        </div>
+      </div>
+
+      <!-- Quick Balance & Support Icons -->
+      <div class="flex items-center gap-2">
+        <div class="bg-brand-surface border border-brand-border/80 px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-inner">
+          <i class="ph ph-wallet text-amber-400 text-sm"></i>
+          <span id="headerBalance" class="text-xs font-bold text-amber-300 font-mono">₹0.00</span>
+          <button onclick="openDepositModal()" class="w-4 h-4 rounded-full gold-gradient-bg text-slate-950 font-black text-[10px] flex items-center justify-center ml-0.5 hover:opacity-90 active:scale-95" title="Instant Deposit">
+            +
+          </button>
+        </div>
+        
+        <!-- Mail & Notifications -->
+        <button onclick="openNotificationModal()" class="relative w-8 h-8 rounded-full bg-brand-surface border border-brand-border flex items-center justify-center text-amber-400 hover:text-amber-300 transition">
+          <i class="ph ph-envelope-simple text-base"></i>
+          <span class="absolute -top-1 -right-1 bg-rose-600 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-brand-dark">1</span>
+        </button>
+
+        <!-- 24/7 Support -->
+        <button onclick="openSubScreen('support')" class="w-8 h-8 rounded-full bg-brand-surface border border-brand-border flex items-center justify-center text-slate-300 hover:text-amber-400 transition" title="Customer Support">
+          <i class="ph ph-headset text-base"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Scrollable Main Viewport -->
+    <main class="flex-1 overflow-y-auto">
+
+      <!-- ======================================================== -->
+      <!-- TAB 1: HOME SCREEN                                       -->
+      <!-- ======================================================== -->
+      <section id="tab-home" class="view-panel space-y-3.5 p-3 block">
+        
+        <!-- Banner Carousel -->
+        <div class="relative rounded-2xl overflow-hidden shadow-lg border border-brand-border">
+          <div id="bannerCarousel" class="flex transition-transform duration-500 ease-out">
+            <!-- Slide 1 -->
+            <div class="min-w-full h-36 bg-gradient-to-r from-amber-700 via-yellow-800 to-slate-950 p-4 flex flex-col justify-between cursor-pointer" onclick="openDepositModal()">
+              <span class="bg-black/50 text-amber-300 text-[10px] font-black px-2 py-0.5 rounded-full w-max uppercase tracking-wider border border-amber-400/40">VIP First Recharge</span>
+              <div>
+                <h3 class="text-base font-black text-white leading-tight">100% INSTANT MATCH BONUS</h3>
+                <p class="text-[11px] text-amber-100 mt-0.5">Pay via PhonePe, GPay, Paytm with 1-Tap UPI</p>
+              </div>
+              <div class="flex items-center gap-1.5 text-xs text-slate-950 font-black gold-gradient-bg px-3 py-1 rounded-full w-max shadow">
+                <span>Deposit Now</span>
+                <i class="ph ph-arrow-right font-bold"></i>
+              </div>
+            </div>
+            <!-- Slide 2 -->
+            <div class="min-w-full h-36 bg-gradient-to-r from-purple-900 via-indigo-950 to-slate-950 p-4 flex flex-col justify-between cursor-pointer" onclick="openGame('wingo')">
+              <span class="bg-black/50 text-purple-200 text-[10px] font-black px-2 py-0.5 rounded-full w-max uppercase tracking-wider border border-purple-400/40">Win Go 1-Min Live</span>
+              <div>
+                <h3 class="text-base font-black text-white leading-tight">PREDICT COLOR & NUMBER</h3>
+                <p class="text-[11px] text-purple-100 mt-0.5">Win up to 9x payout on every single round</p>
+              </div>
+              <div class="flex items-center gap-1.5 text-xs text-white font-bold bg-purple-600 px-3 py-1 rounded-full w-max shadow">
+                <span>Play Win Go</span>
+                <i class="ph ph-play font-bold"></i>
+              </div>
+            </div>
+            <!-- Slide 3 -->
+            <div class="min-w-full h-36 bg-gradient-to-r from-rose-900 via-red-950 to-slate-950 p-4 flex flex-col justify-between cursor-pointer" onclick="openGame('aviator')">
+              <span class="bg-black/50 text-rose-200 text-[10px] font-black px-2 py-0.5 rounded-full w-max uppercase tracking-wider border border-rose-400/40">Crash Rocket</span>
+              <div>
+                <h3 class="text-base font-black text-white leading-tight">AVIATOR CASH ESCAPE</h3>
+                <p class="text-[11px] text-rose-100 mt-0.5">Cash out before the plane flies away for up to 100x</p>
+              </div>
+              <div class="flex items-center gap-1.5 text-xs text-white font-bold bg-rose-600 px-3 py-1 rounded-full w-max shadow">
+                <span>Fly Aviator</span>
+                <i class="ph ph-airplane-takeoff font-bold"></i>
+              </div>
+            </div>
+          </div>
+          <!-- Indicator Dots -->
+          <div class="absolute bottom-2 right-3 flex gap-1" id="carouselDots">
+            <span class="w-3 h-1 rounded-full bg-amber-400 transition-all"></span>
+            <span class="w-1.5 h-1 rounded-full bg-slate-500 transition-all"></span>
+            <span class="w-1.5 h-1 rounded-full bg-slate-500 transition-all"></span>
+          </div>
+        </div>
+
+        <!-- Marquee Notice Bar -->
+        <div class="bg-brand-surface border border-brand-border rounded-xl px-3 py-2 flex items-center justify-between gap-2 shadow-inner">
+          <i class="ph ph-megaphone text-amber-400 text-lg flex-shrink-0 animate-pulse"></i>
+          <div class="overflow-hidden flex-1 relative h-5 flex items-center">
+            <div class="whitespace-nowrap text-[11px] font-semibold text-amber-200/90 animate-marquee inline-block">
+              ⚡ Legacy Win Instant 1-Tap UPI active. Pay with PhonePe, Paytm, GPay, Super.money, BharatPe, CRED & BHIM. Auto UTR verification active 24/7!
+            </div>
+          </div>
+          <button onclick="openNotificationModal()" class="flex-shrink-0 gold-gradient-bg text-slate-950 px-2 py-0.5 rounded-full text-[10px] font-black shadow active:scale-95">
+            Detail
+          </button>
+        </div>
+
+        <!-- Quick Service Navigation (Deposit, Withdraw, VIP, Support) -->
+        <div class="grid grid-cols-4 gap-2 text-center">
+          <button onclick="openDepositModal()" class="bg-brand-card hover:bg-brand-cardHover border border-brand-border p-2.5 rounded-2xl flex flex-col items-center gap-1 transition shadow active:scale-95">
+            <div class="w-11 h-11 rounded-xl gold-gradient-bg flex items-center justify-center text-slate-950 font-black text-xl shadow-md">
+              <i class="ph ph-arrow-down-left"></i>
+            </div>
+            <span class="text-[11px] font-bold text-slate-200">Deposit</span>
+          </button>
+
+          <button onclick="openWithdrawModal()" class="bg-brand-card hover:bg-brand-cardHover border border-brand-border p-2.5 rounded-2xl flex flex-col items-center gap-1 transition shadow active:scale-95">
+            <div class="w-11 h-11 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center text-xl shadow-md">
+              <i class="ph ph-arrow-up-right"></i>
+            </div>
+            <span class="text-[11px] font-bold text-slate-200">Withdraw</span>
+          </button>
+
+          <button onclick="openSubScreen('vip')" class="bg-brand-card hover:bg-brand-cardHover border border-brand-border p-2.5 rounded-2xl flex flex-col items-center gap-1 transition shadow active:scale-95">
+            <div class="w-11 h-11 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center text-xl shadow-md">
+              <i class="ph ph-crown"></i>
+            </div>
+            <span class="text-[11px] font-bold text-slate-200">VIP Club</span>
+          </button>
+
+          <button onclick="openSubScreen('support')" class="bg-brand-card hover:bg-brand-cardHover border border-brand-border p-2.5 rounded-2xl flex flex-col items-center gap-1 transition shadow active:scale-95">
+            <div class="w-11 h-11 rounded-xl bg-sky-500/20 border border-sky-500/40 text-sky-400 flex items-center justify-center text-xl shadow-md">
+              <i class="ph ph-headset"></i>
+            </div>
+            <span class="text-[11px] font-bold text-slate-200">Support</span>
+          </button>
+        </div>
+
+        <!-- 8-Category Horizontal Filter Pill Bar -->
+        <div class="space-y-2 pt-1">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xs font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+              <span class="w-1.5 h-3.5 gold-gradient-bg rounded-full"></span>
+              Game Categories
+            </h2>
+            <span id="activeCategoryTitle" class="text-[10px] text-amber-400 font-extrabold uppercase">Popular Games</span>
+          </div>
+
+          <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs no-scrollbar" id="categoryPillList">
+            <button onclick="filterCategory('popular', this)" class="cat-pill px-3 py-1.5 rounded-full gold-gradient-bg text-slate-950 font-black whitespace-nowrap shadow flex items-center gap-1">
+              <i class="ph ph-fire"></i> Popular
+            </button>
+            <button onclick="filterCategory('lottery', this)" class="cat-pill px-3 py-1.5 rounded-full bg-brand-card border border-brand-border text-slate-300 font-bold whitespace-nowrap flex items-center gap-1">
+              <i class="ph ph-chart-polar"></i> Lottery
+            </button>
+            <button onclick="filterCategory('slots', this)" class="cat-pill px-3 py-1.5 rounded-full bg-brand-card border border-brand-border text-slate-300 font-bold whitespace-nowrap flex items-center gap-1">
+              <i class="ph ph-coins"></i> Slots
+            </button>
+            <button onclick="filterCategory('casino', this)" class="cat-pill px-3 py-1.5 rounded-full bg-brand-card border border-brand-border text-slate-300 font-bold whitespace-nowrap flex items-center gap-1">
+              <i class="ph ph-cards"></i> Casino
+            </button>
+            <button onclick="filterCategory('original', this)" class="cat-pill px-3 py-1.5 rounded-full bg-brand-card border border-brand-border text-slate-300 font-bold whitespace-nowrap flex items-center gap-1">
+              <i class="ph ph-rocket-launch"></i> Original
+            </button>
+            <button onclick="filterCategory('sports', this)" class="cat-pill px-3 py-1.5 rounded-full bg-brand-card border border-brand-border text-slate-300 font-bold whitespace-nowrap flex items-center gap-1">
+              <i class="ph ph-soccer-ball"></i> Sports
+            </button>
+            <button onclick="filterCategory('rummy', this)" class="cat-pill px-3 py-1.5 rounded-full bg-brand-card border border-brand-border text-slate-300 font-bold whitespace-nowrap flex items-center gap-1">
+              <i class="ph ph-diamond"></i> Rummy
+            </button>
+            <button onclick="filterCategory('fishing', this)" class="cat-pill px-3 py-1.5 rounded-full bg-brand-card border border-brand-border text-slate-300 font-bold whitespace-nowrap flex items-center gap-1">
+              <i class="ph ph-fish"></i> Fishing
+            </button>
+          </div>
+        </div>
+
+        <!-- Dynamic Game Roster Grid (Updated by Category Filter) -->
+        <div id="gameRosterGrid" class="grid grid-cols-2 gap-2.5">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- Live Winning Feed Box -->
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-3 space-y-2">
+          <div class="flex items-center justify-between text-xs text-slate-300 border-b border-brand-border/60 pb-2">
+            <span class="font-black flex items-center gap-1.5 text-white">
+              <i class="ph ph-sparkle text-amber-400"></i> Winning Information
+            </span>
+            <span class="text-[10px] text-emerald-400 font-semibold flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> Live Payouts
+            </span>
+          </div>
+
+          <div class="h-28 overflow-hidden relative">
+            <div id="liveWinnerTicker" class="ticker-scroll-content flex flex-col gap-1.5">
+              <!-- Item 1 -->
+              <div class="flex items-center justify-between bg-brand-dark/60 rounded-xl px-2.5 py-1.5 border border-brand-border/40">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-400 to-rose-500 flex items-center justify-center font-black text-slate-950 text-[10px]">U1</div>
+                  <span class="text-xs font-bold text-slate-200">Mem***NKX</span>
+                </div>
+                <div class="text-right">
+                  <span class="text-xs font-black text-amber-300 font-mono">+₹3,920.00</span>
+                  <span class="block text-[9px] text-slate-400">Win Go 1M</span>
+                </div>
+              </div>
+              <!-- Item 2 -->
+              <div class="flex items-center justify-between bg-brand-dark/60 rounded-xl px-2.5 py-1.5 border border-brand-border/40">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-blue-400 to-indigo-600 flex items-center justify-center font-black text-white text-[10px]">U2</div>
+                  <span class="text-xs font-bold text-slate-200">Mem***FZU</span>
+                </div>
+                <div class="text-right">
+                  <span class="text-xs font-black text-amber-300 font-mono">+₹1,450.00</span>
+                  <span class="block text-[9px] text-slate-400">Aviator</span>
+                </div>
+              </div>
+              <!-- Item 3 -->
+              <div class="flex items-center justify-between bg-brand-dark/60 rounded-xl px-2.5 py-1.5 border border-brand-border/40">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-emerald-400 to-teal-600 flex items-center justify-center font-black text-slate-950 text-[10px]">U3</div>
+                  <span class="text-xs font-bold text-slate-200">Mem***CJW</span>
+                </div>
+                <div class="text-right">
+                  <span class="text-xs font-black text-amber-300 font-mono">+₹880.00</span>
+                  <span class="block text-[9px] text-slate-400">Mines</span>
+                </div>
+              </div>
+              <!-- Item 4 -->
+              <div class="flex items-center justify-between bg-brand-dark/60 rounded-xl px-2.5 py-1.5 border border-brand-border/40">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-purple-400 to-pink-500 flex items-center justify-center font-black text-white text-[10px]">U4</div>
+                  <span class="text-xs font-bold text-slate-200">Mem***TWV</span>
+                </div>
+                <div class="text-right">
+                  <span class="text-xs font-black text-amber-300 font-mono">+₹2,285.00</span>
+                  <span class="block text-[9px] text-slate-400">Dragon Tiger</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leaderboard Podium Top 3 -->
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-3.5 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-black text-white uppercase flex items-center gap-1.5">
+              <i class="ph ph-trophy text-amber-400 text-sm"></i> Today's Profit Leaderboard
+            </h3>
+            <span class="text-[10px] text-slate-400">Top 3 Earners</span>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 text-center pt-2">
+            <!-- Rank 2 -->
+            <div class="bg-brand-dark/80 rounded-xl p-2.5 border border-slate-600 flex flex-col items-center">
+              <span class="text-[9px] font-black bg-slate-300 text-slate-950 px-2 py-0.5 rounded-full mb-1">NO. 2</span>
+              <span class="text-xs font-bold text-slate-200 mt-1 truncate max-w-full">Mem***UKX</span>
+              <span class="text-[11px] font-black text-amber-300 mt-0.5 font-mono">₹2,49,100</span>
+            </div>
+            <!-- Rank 1 (Elevated) -->
+            <div class="bg-amber-950/40 rounded-xl p-2.5 border-2 border-amber-400 flex flex-col items-center -mt-2 shadow-lg">
+              <i class="ph ph-crown text-amber-400 text-xl animate-bounce"></i>
+              <span class="text-[10px] font-black gold-gradient-bg text-slate-950 px-2.5 py-0.5 rounded-full mb-1">CHAMPION</span>
+              <span class="text-xs font-black text-white mt-1 truncate max-w-full">Sha***waz</span>
+              <span class="text-xs font-black text-amber-300 mt-0.5 font-mono">₹5,56,248</span>
+            </div>
+            <!-- Rank 3 -->
+            <div class="bg-brand-dark/80 rounded-xl p-2.5 border border-amber-800 flex flex-col items-center">
+              <span class="text-[9px] font-black bg-amber-700 text-white px-2 py-0.5 rounded-full mb-1">NO. 3</span>
+              <span class="text-xs font-bold text-slate-200 mt-1 truncate max-w-full">Tra***ing</span>
+              <span class="text-[11px] font-black text-amber-300 mt-0.5 font-mono">₹1,92,370</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- TAB 2: ACTIVITY SCREEN                                   -->
+      <!-- ======================================================== -->
+      <section id="tab-activity" class="view-panel hidden space-y-3.5 p-3">
+        <h2 class="text-sm font-black text-white uppercase tracking-wider">Rewards & Activity Center</h2>
+
+        <!-- Attendance Bonus Card -->
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-extrabold text-sm text-white">Daily Attendance Bonus</h3>
+              <p class="text-[11px] text-slate-400">Consecutive sign-ins boost your free wallet cash</p>
+            </div>
+            <button id="attendanceClaimBtn" onclick="claimAttendance()" class="px-3.5 py-1.5 gold-gradient-bg text-slate-950 font-black text-xs rounded-xl shadow active:scale-95">
+              Sign-In
+            </button>
+          </div>
+
+          <div class="grid grid-cols-7 gap-1.5 pt-2 text-center text-xs">
+            <div class="bg-brand-surface border border-emerald-500/40 p-1.5 rounded-xl"><span class="block text-[9px] text-slate-400">D1</span><span class="font-bold text-amber-300 font-mono">+₹5</span></div>
+            <div class="bg-brand-surface border border-slate-700 p-1.5 rounded-xl"><span class="block text-[9px] text-slate-400">D2</span><span class="font-bold text-amber-300 font-mono">+₹10</span></div>
+            <div class="bg-brand-surface border border-slate-700 p-1.5 rounded-xl"><span class="block text-[9px] text-slate-400">D3</span><span class="font-bold text-amber-300 font-mono">+₹15</span></div>
+            <div class="bg-brand-surface border border-slate-700 p-1.5 rounded-xl"><span class="block text-[9px] text-slate-400">D4</span><span class="font-bold text-amber-300 font-mono">+₹20</span></div>
+            <div class="bg-brand-surface border border-slate-700 p-1.5 rounded-xl"><span class="block text-[9px] text-slate-400">D5</span><span class="font-bold text-amber-300 font-mono">+₹25</span></div>
+            <div class="bg-brand-surface border border-slate-700 p-1.5 rounded-xl"><span class="block text-[9px] text-slate-400">D6</span><span class="font-bold text-amber-300 font-mono">+₹30</span></div>
+            <div class="bg-amber-500/20 border border-amber-500 p-1.5 rounded-xl"><span class="block text-[9px] text-amber-300 font-black">D7</span><span class="font-black text-amber-300 font-mono">+₹100</span></div>
+          </div>
+        </div>
+
+        <!-- Redeem Promo Code -->
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-4 space-y-3">
+          <h3 class="font-extrabold text-sm text-white flex items-center gap-1.5">
+            <i class="ph ph-ticket text-amber-400 text-lg"></i> Redeem Official Gift Code
+          </h3>
+          <div class="flex gap-2">
+            <input id="giftCodeInput" type="text" placeholder="Enter Code (e.g. BDG2026 or VIP500)" class="flex-1 bg-brand-surface border border-brand-border rounded-xl px-3 py-2 text-xs text-white uppercase font-mono tracking-wider outline-none focus:border-amber-400">
+            <button onclick="redeemGiftCode()" class="px-4 py-2 gold-gradient-bg text-slate-950 font-black text-xs rounded-xl shadow active:scale-95">Redeem</button>
+          </div>
+          <p class="text-[10px] text-slate-400 font-mono">Tip: Try promo code <strong class="text-amber-300">BDG2026</strong> for ₹100 or <strong class="text-amber-300">VIP500</strong> for ₹500.</p>
+        </div>
+
+        <!-- Task Reward Missions -->
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-4 space-y-3 text-xs">
+          <h4 class="font-black text-white text-sm">Platform Missions</h4>
+          <div class="flex items-center justify-between py-2 border-b border-brand-border/60">
+            <div>
+              <span class="font-bold text-slate-200">First Recharge ₹500</span>
+              <span class="block text-[10px] text-slate-400">Reward: ₹50 Instant Play Voucher</span>
+            </div>
+            <button onclick="openDepositModal()" class="px-3 py-1 rounded-lg border border-amber-400 text-amber-300 text-[11px] font-black">Recharge</button>
+          </div>
+          <div class="flex items-center justify-between py-2 border-b border-brand-border/60">
+            <div>
+              <span class="font-bold text-slate-200">Bind Bank Card</span>
+              <span class="block text-[10px] text-slate-400">Reward: ₹20 Security Bonus</span>
+            </div>
+            <button onclick="openSubScreen('bank')" class="px-3 py-1 rounded-lg border border-emerald-400 text-emerald-300 text-[11px] font-black">Bind Now</button>
+          </div>
+          <div class="flex items-center justify-between py-2">
+            <div>
+              <span class="font-bold text-slate-200">Play 5 Win Go Rounds</span>
+              <span class="block text-[10px] text-slate-400">Reward: Free VIP Lucky Spin</span>
+            </div>
+            <button onclick="openGame('wingo')" class="px-3 py-1 rounded-lg border border-purple-400 text-purple-300 text-[11px] font-black">Play</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- TAB 3: GET ₹500 WHEEL ACCUMULATOR                        -->
+      <!-- ======================================================== -->
+      <section id="tab-wheel" class="view-panel hidden space-y-3.5 p-3 text-center">
+        <div class="bg-gradient-to-b from-amber-950/70 via-brand-card to-brand-surface border border-amber-500/40 rounded-3xl p-5 relative overflow-hidden shadow-2xl">
+          <span class="bg-amber-400 text-slate-950 font-black text-[10px] px-3 py-0.5 rounded-full uppercase tracking-wider">Instant Cashout Task</span>
+          <h2 class="text-xl font-black text-white mt-2">Cash Out ₹500 Free</h2>
+          <p class="text-xs text-amber-200/90 mt-1">Spin the wheel to hit ₹500 and withdraw directly to UPI</p>
+
+          <!-- Accumulated Progress Meter -->
+          <div class="my-4 bg-brand-surface p-3.5 rounded-2xl border border-brand-border">
+            <div class="flex justify-between text-xs font-bold mb-1.5">
+              <span class="text-slate-300">Current Accumulated</span>
+              <span id="wheelProgressText" class="text-amber-400 font-black font-mono">₹482.50 / ₹500.00</span>
+            </div>
+            <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden p-0.5 border border-slate-700">
+              <div id="wheelProgressBar" class="h-full gold-gradient-bg rounded-full transition-all duration-700" style="width: 96.5%;"></div>
+            </div>
+            <span class="block text-[10px] text-amber-300/80 mt-2 font-medium">Only ₹17.50 more needed to claim ₹500 cash!</span>
+          </div>
+
+          <!-- HTML5 Canvas Spinning Disc -->
+          <div class="relative w-64 h-64 mx-auto my-3 flex items-center justify-center">
+            <!-- Needle Pointer -->
+            <div class="absolute -top-2 z-20 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[22px] border-t-amber-400 drop-shadow-lg"></div>
+            <!-- Canvas -->
+            <canvas id="wheelCanvas" width="250" height="250" class="rounded-full shadow-2xl transition-transform duration-[4000ms] cubic-bezier(0.15, 0.9, 0.2, 1) border-4 border-amber-400/80"></canvas>
+            <!-- Center Button -->
+            <button onclick="spinAccumulatorWheel()" id="spinActionBtn" class="absolute z-10 w-14 h-14 rounded-full gold-gradient-bg text-slate-950 font-black text-xs shadow-2xl flex items-center justify-center border-2 border-white hover:scale-105 active:scale-95">
+              SPIN
+            </button>
+          </div>
+
+          <div class="flex items-center justify-center gap-2 mt-4 text-xs">
+            <span class="text-slate-300">Spins Remaining:</span>
+            <span id="freeSpinsCount" class="font-black text-amber-400 text-sm font-mono">3</span>
+          </div>
+
+          <button onclick="shareInviteLink()" class="mt-3.5 w-full py-3 rounded-2xl gold-gradient-bg text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg hover:opacity-95 active:scale-98">
+            Invite Friends For +2 Free Spins
+          </button>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- TAB 4: PROMOTION / AGENCY PORTAL                         -->
+      <!-- ======================================================== -->
+      <section id="tab-promotion" class="view-panel hidden space-y-3.5 p-3">
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <h2 class="text-sm font-black text-white uppercase">Agency Commission</h2>
+            <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2.5 py-0.5 rounded-full border border-indigo-500/40 font-bold">Tier 1 Agent</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-center pt-2">
+            <div class="bg-brand-surface p-3 rounded-xl border border-brand-border">
+              <span class="text-[10px] text-slate-400 block font-semibold">Yesterday's Rebate</span>
+              <span class="text-base font-black text-emerald-400 mt-1 block font-mono">₹1,420.50</span>
+            </div>
+            <div class="bg-brand-surface p-3 rounded-xl border border-brand-border">
+              <span class="text-[10px] text-slate-400 block font-semibold">Total Team Members</span>
+              <span class="text-base font-black text-amber-300 mt-1 block font-mono">38 Members</span>
+            </div>
+          </div>
+
+          <!-- Referral Link Input -->
+          <div class="pt-2">
+            <label class="text-xs text-slate-300 block mb-1 font-semibold">Your Permanent Invite Link</label>
+            <div class="flex gap-2">
+              <input id="refLinkInput" type="text" readonly value="https://bdgwin7.online/#/register?inv=991894225" class="flex-1 bg-brand-surface border border-brand-border rounded-xl px-3 py-2 text-xs text-slate-300 truncate outline-none font-mono">
+              <button onclick="copyReferralLink()" class="px-3.5 py-2 gold-gradient-bg text-slate-950 font-black text-xs rounded-xl flex items-center gap-1 shadow active:scale-95">
+                <i class="ph ph-copy"></i> Copy
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Commission Rules -->
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-4 text-xs space-y-2 text-slate-300">
+          <h4 class="font-black text-white text-sm mb-1">Tiered Commission Payouts</h4>
+          <div class="flex justify-between py-1.5 border-b border-brand-border/60">
+            <span>Level 1 Direct Subordinates</span>
+            <span class="font-extrabold text-amber-300">0.7% Turnover</span>
+          </div>
+          <div class="flex justify-between py-1.5 border-b border-brand-border/60">
+            <span>Level 2 Subordinates</span>
+            <span class="font-extrabold text-amber-300">0.3% Turnover</span>
+          </div>
+          <div class="flex justify-between py-1.5">
+            <span>Level 3 Subordinates</span>
+            <span class="font-extrabold text-amber-300">0.1% Turnover</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- TAB 5: ACCOUNT & PROFILE                                 -->
+      <!-- ======================================================== -->
+      <section id="tab-account" class="view-panel hidden space-y-3.5 p-3">
+        <!-- Profile Header -->
+        <div class="bg-gradient-to-r from-brand-card to-[#1a1f2e] border border-brand-border rounded-2xl p-4 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-13 h-13 rounded-full bg-slate-800 border-2 border-amber-400 p-0.5 flex items-center justify-center overflow-hidden">
+              <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Pranit" alt="User Avatar" class="w-12 h-12">
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="font-black text-white text-sm">MEMBER_784920</h3>
+                <span class="bg-amber-500/20 text-amber-300 text-[9px] font-black px-1.5 py-0.2 rounded border border-amber-400/40">VIP 1</span>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-0.5 font-mono">UID: 2257948</p>
+            </div>
+          </div>
+          <button onclick="openSubScreen('support')" class="text-slate-400 hover:text-white p-2">
+            <i class="ph ph-gear text-xl"></i>
+          </button>
+        </div>
+
+        <!-- Available Balance Card -->
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-4 space-y-3">
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span>Total Available Wallet</span>
+            <button onclick="refreshBalanceAction()" class="text-amber-400 flex items-center gap-1 font-bold hover:underline">
+              <i class="ph ph-arrows-clockwise"></i> Refresh
+            </button>
+          </div>
+          <div class="text-2xl font-black text-amber-300 font-mono" id="accountTotalBalance">₹0.00</div>
+
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button onclick="openDepositModal()" class="py-2.5 rounded-xl gold-gradient-bg text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 shadow active:scale-95">
+              <i class="ph ph-arrow-down-left text-base"></i> Recharge / Deposit
+            </button>
+            <button onclick="openWithdrawModal()" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-black text-xs flex items-center justify-center gap-1.5 text-white active:scale-95">
+              <i class="ph ph-arrow-up-right text-base"></i> Withdraw Funds
+            </button>
+          </div>
+        </div>
+
+        <!-- Secondary Action Cards -->
+        <div class="grid grid-cols-3 gap-2 text-center text-xs">
+          <button onclick="openSubScreen('records')" class="bg-brand-card hover:bg-brand-cardHover border border-brand-border p-3 rounded-2xl flex flex-col items-center gap-1 transition">
+            <i class="ph ph-receipt text-amber-400 text-2xl"></i>
+            <span class="font-bold text-slate-200">Bet History</span>
+          </button>
+          <button onclick="openSubScreen('wallet-history')" class="bg-brand-card hover:bg-brand-cardHover border border-brand-border p-3 rounded-2xl flex flex-col items-center gap-1 transition">
+            <i class="ph ph-clock-counter-clockwise text-emerald-400 text-2xl"></i>
+            <span class="font-bold text-slate-200">Transactions</span>
+          </button>
+          <button onclick="openSubScreen('bank')" class="bg-brand-card hover:bg-brand-cardHover border border-brand-border p-3 rounded-2xl flex flex-col items-center gap-1 transition">
+            <i class="ph ph-credit-card text-sky-400 text-2xl"></i>
+            <span class="font-bold text-slate-200">Bank Card</span>
+          </button>
+        </div>
+
+        <!-- Recent Ledger Events -->
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-4 space-y-2">
+          <div class="flex items-center justify-between text-xs">
+            <h4 class="font-black text-white">Recent Transactions</h4>
+            <span class="text-[10px] text-slate-400">Latest 5 events</span>
+          </div>
+          <div id="txHistoryContainer" class="space-y-2 text-xs">
+            <!-- Injected via state -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SUB-SCREEN: VIP CLUB                                     -->
+      <!-- ======================================================== -->
+      <section id="subscreen-vip" class="sub-view-panel hidden space-y-3.5 p-3">
+        <div class="flex items-center gap-3 pb-2 border-b border-brand-border">
+          <button onclick="closeSubScreen('vip')" class="w-8 h-8 rounded-full bg-brand-surface border border-brand-border flex items-center justify-center text-slate-300"><i class="ph ph-arrow-left text-base"></i></button>
+          <h2 class="text-sm font-black text-white uppercase">VIP Club Privileges</h2>
+        </div>
+
+        <div class="bg-gradient-to-r from-amber-950/60 to-brand-card border border-amber-500/40 rounded-2xl p-4 space-y-3 shadow-lg">
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-black text-amber-300">Level: VIP 1</span>
+            <span class="text-xs text-slate-400">Target: VIP 2</span>
+          </div>
+          <div class="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden">
+            <div class="h-full gold-gradient-bg" style="width: 50%;"></div>
+          </div>
+          <p class="text-[11px] text-slate-300">Total Bet Turnover: ₹5,000 / ₹10,000</p>
+        </div>
+
+        <div class="space-y-2 text-xs">
+          <div class="bg-brand-card border border-brand-border rounded-xl p-3 flex justify-between items-center">
+            <div>
+              <span class="font-bold text-white block">VIP 1 Upgrade Bonus</span>
+              <span class="text-[10px] text-slate-400">One-time claim bonus</span>
+            </div>
+            <button onclick="claimVipBonus(50, this)" class="px-3 py-1.5 gold-gradient-bg text-slate-950 font-black rounded-lg shadow">Claim ₹50</button>
+          </div>
+          <div class="bg-brand-card border border-brand-border rounded-xl p-3 flex justify-between items-center">
+            <div>
+              <span class="font-bold text-white block">VIP 1 Daily Cashback</span>
+              <span class="text-[10px] text-slate-400">0.3% Daily rebate credited</span>
+            </div>
+            <button onclick="claimVipBonus(15, this)" class="px-3 py-1.5 bg-slate-800 border border-slate-700 text-amber-300 font-bold rounded-lg">Claim ₹15</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SUB-SCREEN: 24/7 CUSTOMER SUPPORT & TELEGRAM PORTAL      -->
+      <!-- ======================================================== -->
+      <section id="subscreen-support" class="sub-view-panel hidden space-y-3.5 p-3">
+        <!-- Top bar with Back and Help ID -->
+        <div class="flex items-center justify-between pb-2 border-b border-brand-border">
+          <div class="flex items-center gap-2.5">
+            <button onclick="closeSubScreen('support')" class="w-8 h-8 rounded-full bg-brand-surface border border-brand-border flex items-center justify-center text-slate-300 hover:text-white">
+              <i class="ph ph-arrow-left text-base"></i>
+            </button>
+            <div>
+              <h2 class="text-sm font-black text-white uppercase tracking-wider">Customer Care</h2>
+              <span class="text-[10px] text-emerald-400 font-bold flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Telegram Desk & Agents Online
+              </span>
+            </div>
+          </div>
+          <span class="text-[10px] text-amber-400 font-mono bg-brand-surface px-2 py-0.5 rounded-md border border-brand-border">
+            UID: 2257948
+          </span>
+        </div>
+
+        <!-- Telegram Quick Connect Card -->
+        <div class="bg-gradient-to-br from-sky-950/80 via-brand-card to-slate-950 border border-sky-500/40 rounded-2xl p-4 shadow-xl relative overflow-hidden">
+          <div class="absolute -right-6 -top-6 w-24 h-24 bg-sky-500/10 rounded-full blur-xl pointer-events-none"></div>
+          <div class="flex items-center justify-between mb-2.5">
+            <div class="flex items-center gap-2">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-blue-600 flex items-center justify-center text-white text-2xl shadow-lg">
+                <i class="ph ph-telegram-logo font-bold"></i>
+              </div>
+              <div>
+                <h3 class="text-sm font-black text-white">Official Telegram Support</h3>
+                <p class="text-[10px] text-sky-200">Instant response for Recharge & Payouts</p>
+              </div>
+            </div>
+            <span class="bg-sky-500/20 text-sky-300 border border-sky-400/30 text-[9px] font-black px-2 py-0.5 rounded-full">24x7 Active</span>
+          </div>
+
+          <p class="text-[11px] text-slate-300 mb-3 leading-relaxed">
+            Need urgent help with your UPI recharge, pending withdrawal, or daily prediction signals? Reach out directly via our verified Telegram channels:
+          </p>
+
+          <!-- 3 Dedicated Telegram Channels -->
+          <div class="space-y-2">
+            <!-- Channel 1: Recharge Support -->
+            <div class="bg-brand-surface/90 border border-brand-border rounded-xl p-2.5 flex items-center justify-between text-xs">
+              <div class="flex items-center gap-2 truncate pr-2">
+                <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm flex-shrink-0">
+                  <i class="ph ph-currency-inr font-bold"></i>
+                </div>
+                <div class="truncate">
+                  <span class="font-bold text-white block truncate">Recharge & UTR Desk</span>
+                  <span class="text-[10px] text-slate-400 font-mono">@LegacyWin_Recharge_Desk</span>
+                </div>
+              </div>
+              <button onclick="launchTelegramDirect('LegacyWin_Recharge_Desk')" class="px-3 py-1.5 rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-950 font-black text-[11px] shadow flex items-center gap-1 active:scale-95 flex-shrink-0">
+                <i class="ph ph-paper-plane-tilt"></i> Open
+              </button>
+            </div>
+
+            <!-- Channel 2: Official Telegram Channel -->
+            <div class="bg-brand-surface/90 border border-brand-border rounded-xl p-2.5 flex items-center justify-between text-xs">
+              <div class="flex items-center gap-2 truncate pr-2">
+                <div class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm flex-shrink-0">
+                  <i class="ph ph-broadcast font-bold"></i>
+                </div>
+                <div class="truncate">
+                  <span class="font-bold text-white block truncate">Official Prediction Channel</span>
+                  <span class="text-[10px] text-slate-400 font-mono">@LegacyWin_Official_Channel</span>
+                </div>
+              </div>
+              <button onclick="launchTelegramDirect('LegacyWin_Official_Channel')" class="px-3 py-1.5 rounded-lg gold-gradient-bg text-slate-950 font-black text-[11px] shadow flex items-center gap-1 active:scale-95 flex-shrink-0">
+                <i class="ph ph-telegram-logo"></i> Join
+              </button>
+            </div>
+
+            <!-- Channel 3: VIP Manager -->
+            <div class="bg-brand-surface/90 border border-brand-border rounded-xl p-2.5 flex items-center justify-between text-xs">
+              <div class="flex items-center gap-2 truncate pr-2">
+                <div class="w-7 h-7 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-sm flex-shrink-0">
+                  <i class="ph ph-crown font-bold"></i>
+                </div>
+                <div class="truncate">
+                  <span class="font-bold text-white block truncate">VIP Personal Mentor</span>
+                  <span class="text-[10px] text-slate-400 font-mono">@LegacyWin_VIP_Mentor</span>
+                </div>
+              </div>
+              <button onclick="launchTelegramDirect('LegacyWin_VIP_Mentor')" class="px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-black text-[11px] shadow flex items-center gap-1 active:scale-95 flex-shrink-0">
+                <i class="ph ph-chat-circle-dots"></i> Chat
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Automated Telegram UTR Dispute Formatter Tool -->
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-black text-white flex items-center gap-1.5">
+              <i class="ph ph-lightning text-amber-400 text-base"></i> Speed-Up Recharge via Telegram
+            </h4>
+            <span class="text-[9px] text-amber-300 font-bold bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">1-Click Fast Resolution</span>
+          </div>
+          <p class="text-[11px] text-slate-300">
+            Did you pay to <strong class="text-amber-300 font-mono">paytm.s2xraax@pty</strong> but balance is pending? Enter your 12-digit UTR below:
+          </p>
+
+          <div class="space-y-2 text-xs">
+            <input id="supportUtrInput" type="text" maxlength="12" placeholder="Enter 12-Digit Bank UTR (e.g. 427918902847)" class="w-full bg-brand-surface border border-brand-border rounded-xl px-3 py-2 text-white font-mono outline-none focus:border-sky-400">
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="generateAndCopyTelegramTicket()" class="py-2.5 rounded-xl bg-brand-surface hover:bg-slate-800 border border-brand-border text-white font-bold flex items-center justify-center gap-1.5 active:scale-95">
+                <i class="ph ph-copy text-amber-400"></i> Copy Dispute Text
+              </button>
+              <button onclick="sendUtrToTelegramDirect()" class="py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-black flex items-center justify-center gap-1.5 shadow active:scale-95">
+                <i class="ph ph-paper-plane-tilt"></i> Send on Telegram
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live In-App Chat Launcher -->
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-4 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl shadow">
+              <i class="ph ph-chats-circle"></i>
+            </div>
+            <div>
+              <h4 class="font-black text-sm text-white">Live In-App Chat Desk</h4>
+              <p class="text-[11px] text-slate-400">Chat with online agent without leaving app</p>
+            </div>
+          </div>
+          <button onclick="openLiveChatModal()" class="px-3.5 py-2 rounded-xl gold-gradient-bg text-slate-950 font-black text-xs shadow active:scale-95">
+            Start Chat
+          </button>
+        </div>
+
+        <!-- FAQ Accordion -->
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-4 space-y-2.5 text-xs">
+          <h4 class="font-black text-white text-sm mb-1 flex items-center gap-1.5">
+            <i class="ph ph-question text-sky-400 text-base"></i> Help Center FAQs
+          </h4>
+          
+          <div class="border-b border-brand-border/60 pb-2">
+            <span class="font-bold text-slate-200 block">Why is my deposit not reflected?</span>
+            <p class="text-[11px] text-slate-400 mt-0.5 leading-relaxed">UPI bank servers may occasionally queue payments for 1-3 minutes. Enter the exact 12-digit UTR in our Cashier or send it to our Telegram support desk for priority manual audit.</p>
+          </div>
+
+          <div class="border-b border-brand-border/60 pb-2">
+            <span class="font-bold text-slate-200 block">What is the minimum payout amount?</span>
+            <p class="text-[11px] text-slate-400 mt-0.5 leading-relaxed">The minimum withdrawal amount is ₹110. Payouts are transferred automatically via IMPS to your bound Bank Account or UPI VPA.</p>
+          </div>
+
+          <div>
+            <span class="font-bold text-slate-200 block">How can I claim daily prediction gift codes?</span>
+            <p class="text-[11px] text-slate-400 mt-0.5 leading-relaxed">Join our Official Telegram Prediction Channel where free gift codes (₹50 to ₹500) are released 3 times a day.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SUB-SCREEN: DETAILED BET RECORDS                         -->
+      <!-- ======================================================== -->
+      <section id="subscreen-records" class="sub-view-panel hidden space-y-3.5 p-3">
+        <div class="flex items-center gap-3 pb-2 border-b border-brand-border">
+          <button onclick="closeSubScreen('records')" class="w-8 h-8 rounded-full bg-brand-surface border border-brand-border flex items-center justify-center text-slate-300"><i class="ph ph-arrow-left text-base"></i></button>
+          <h2 class="text-sm font-black text-white uppercase">My Bet Records</h2>
+        </div>
+
+        <div class="bg-brand-card border border-brand-border rounded-2xl overflow-hidden shadow">
+          <table class="w-full text-xs text-center border-collapse">
+            <thead>
+              <tr class="text-slate-400 border-b border-brand-border text-[11px] bg-brand-surface">
+                <th class="py-2.5 px-2">Game</th>
+                <th>Pick</th>
+                <th>Stake</th>
+                <th>Payout</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="betRecordsTableBody" class="divide-y divide-brand-border/60 text-slate-300 font-mono">
+              <!-- Populated by game actions -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SUB-SCREEN: TRANSACTION LEDGER                           -->
+      <!-- ======================================================== -->
+      <section id="subscreen-wallet-history" class="sub-view-panel hidden space-y-3.5 p-3">
+        <div class="flex items-center gap-3 pb-2 border-b border-brand-border">
+          <button onclick="closeSubScreen('wallet-history')" class="w-8 h-8 rounded-full bg-brand-surface border border-brand-border flex items-center justify-center text-slate-300"><i class="ph ph-arrow-left text-base"></i></button>
+          <h2 class="text-sm font-black text-white uppercase">Recharge & Payout History</h2>
+        </div>
+
+        <div id="fullLedgerContainer" class="space-y-2 text-xs">
+          <!-- Populated from global state -->
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SUB-SCREEN: BIND BANK / UPI                              -->
+      <!-- ======================================================== -->
+      <section id="subscreen-bank" class="sub-view-panel hidden space-y-3.5 p-3">
+        <div class="flex items-center gap-3 pb-2 border-b border-brand-border">
+          <button onclick="closeSubScreen('bank')" class="w-8 h-8 rounded-full bg-brand-surface border border-brand-border flex items-center justify-center text-slate-300"><i class="ph ph-arrow-left text-base"></i></button>
+          <h2 class="text-sm font-black text-white uppercase">Bind Bank Account & UPI</h2>
+        </div>
+
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-4 space-y-3 text-xs">
+          <div>
+            <label class="text-slate-300 font-semibold block mb-1">Account Holder Full Name</label>
+            <input id="bankNameInput" type="text" value="PRANIT PANDEWAR" class="w-full bg-brand-surface border border-brand-border rounded-xl px-3 py-2 text-white outline-none focus:border-amber-400">
+          </div>
+          <div>
+            <label class="text-slate-300 font-semibold block mb-1">Bank Name</label>
+            <input id="bankNameField" type="text" value="State Bank of India" class="w-full bg-brand-surface border border-brand-border rounded-xl px-3 py-2 text-white outline-none focus:border-amber-400">
+          </div>
+          <div>
+            <label class="text-slate-300 font-semibold block mb-1">Bank Account Number</label>
+            <input id="bankAccField" type="text" value="38941092849" class="w-full bg-brand-surface border border-brand-border rounded-xl px-3 py-2 text-white outline-none focus:border-amber-400 font-mono">
+          </div>
+          <div>
+            <label class="text-slate-300 font-semibold block mb-1">IFSC Code</label>
+            <input id="bankIfscField" type="text" value="SBIN0001248" class="w-full bg-brand-surface border border-brand-border rounded-xl px-3 py-2 text-white outline-none focus:border-amber-400 uppercase font-mono">
+          </div>
+          <div>
+            <label class="text-slate-300 font-semibold block mb-1">UPI ID (VPA)</label>
+            <input id="bankUpiField" type="text" value="9876543210@paytm" class="w-full bg-brand-surface border border-brand-border rounded-xl px-3 py-2 text-white outline-none focus:border-amber-400 font-mono">
+          </div>
+          <button onclick="saveBankDetails()" class="w-full py-3 rounded-xl gold-gradient-bg text-slate-950 font-black text-xs uppercase shadow mt-1 active:scale-95">Save Details</button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ======================================================== -->
+    <!-- DEPOSIT & 1-TAP UPI INTENT QR CASHIER MODALS             -->
+    <!-- ======================================================== -->
+
+    <!-- STEP 1: Select Amount Modal -->
+    <div id="depositModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="bg-brand-card border border-brand-border w-full max-w-[440px] rounded-t-3xl sm:rounded-2xl p-5 space-y-4 max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between pb-2 border-b border-brand-border">
+          <h3 class="font-black text-white text-sm flex items-center gap-2">
+            <i class="ph ph-wallet text-amber-400 text-lg"></i> Deposit / Recharge Wallet
+          </h3>
+          <button onclick="closeDepositModal()" class="text-slate-400 hover:text-white p-1"><i class="ph ph-x text-lg"></i></button>
+        </div>
+
+        <div>
+          <label class="text-xs text-slate-400 block mb-1.5 font-semibold">Payment Channel</label>
+          <div class="grid grid-cols-3 gap-2 text-center text-xs">
+            <button type="button" class="border-2 border-amber-400 bg-amber-500/10 p-2.5 rounded-xl text-amber-300 font-extrabold flex flex-col items-center gap-1 shadow">
+              <i class="ph ph-qr-code text-xl"></i> Instant UPI
+            </button>
+            <button type="button" onclick="showToast('NetBanking gateway selected')" class="border border-brand-border bg-brand-surface p-2.5 rounded-xl text-slate-300 flex flex-col items-center gap-1">
+              <i class="ph ph-bank text-xl"></i> NetBanking
+            </button>
+            <button type="button" onclick="showToast('USDT TRC20 gateway selected')" class="border border-brand-border bg-brand-surface p-2.5 rounded-xl text-slate-300 flex flex-col items-center gap-1">
+              <i class="ph ph-currency-eth text-xl"></i> USDT TRC20
+            </button>
+          </div>
+        </div>
+
+        <!-- Chips selection -->
+        <div>
+          <label class="text-xs text-slate-400 block mb-1.5 font-semibold">Select Amount (INR)</label>
+          <div class="grid grid-cols-4 gap-2 text-xs font-bold text-center">
+            <button onclick="selectDepositAmt(100)" class="dep-chip bg-brand-surface border border-brand-border p-2 rounded-xl hover:border-amber-400">₹100</button>
+            <button onclick="selectDepositAmt(300)" class="dep-chip bg-brand-surface border border-brand-border p-2 rounded-xl hover:border-amber-400">₹300</button>
+            <button onclick="selectDepositAmt(500)" class="dep-chip bg-brand-surface border-2 border-amber-400 bg-amber-500/10 p-2 rounded-xl text-amber-300">₹500</button>
+            <button onclick="selectDepositAmt(1000)" class="dep-chip bg-brand-surface border border-brand-border p-2 rounded-xl hover:border-amber-400">₹1,000</button>
+            <button onclick="selectDepositAmt(2000)" class="dep-chip bg-brand-surface border border-brand-border p-2 rounded-xl hover:border-amber-400">₹2,000</button>
+            <button onclick="selectDepositAmt(5000)" class="dep-chip bg-brand-surface border border-brand-border p-2 rounded-xl hover:border-amber-400">₹5,000</button>
+            <button onclick="selectDepositAmt(10000)" class="dep-chip bg-brand-surface border border-brand-border p-2 rounded-xl hover:border-amber-400">₹10,000</button>
+            <button onclick="selectDepositAmt(50000)" class="dep-chip bg-brand-surface border border-brand-border p-2 rounded-xl hover:border-amber-400">₹50,000</button>
+          </div>
+          <input id="customDepositInput" type="number" value="500" class="mt-2.5 w-full bg-brand-surface border border-brand-border rounded-xl px-3 py-2 text-sm text-white font-mono font-bold outline-none focus:border-amber-400">
+        </div>
+
+        <button onclick="proceedToPaymentGateway()" class="w-full py-3.5 rounded-xl gold-gradient-bg text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg hover:opacity-90 active:scale-95">
+          Proceed to Pay ₹<span id="depSubmitAmtDisplay">500</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Realistic Dynamic Scannable UPI QR Cashier with Tap-to-Pay -->
+    <div id="cashierModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="bg-brand-card border border-brand-border w-full max-w-[440px] rounded-t-3xl sm:rounded-2xl p-5 space-y-3 max-h-[95vh] overflow-y-auto">
+        <div class="flex items-center justify-between pb-2 border-b border-brand-border">
+          <div class="text-left">
+            <h4 class="font-black text-white text-sm">Legacy Win UPI Cashier</h4>
+            <span class="text-[10px] text-amber-400 font-semibold font-mono">Order: <span id="cashierOrderId">LW-984210</span></span>
+          </div>
+          <button onclick="closeCashierModal()" class="text-slate-400 hover:text-white p-1"><i class="ph ph-x text-lg"></i></button>
+        </div>
+
+        <!-- Timer & Amount Banner -->
+        <div class="flex items-center justify-between bg-brand-surface p-2.5 rounded-xl border border-brand-border text-xs">
+          <div>
+            <span class="text-[10px] text-slate-400 block font-semibold">Payment Amount</span>
+            <span class="text-base font-black text-amber-300 font-mono" id="cashierTotalAmtDisplay">₹0.00</span>
+          </div>
+          <div class="text-right">
+            <span class="text-[10px] text-slate-400 block font-semibold">QR Expires In</span>
+            <span id="qrCountdownTimer" class="font-mono font-bold text-rose-400">04:59</span>
+          </div>
+        </div>
+
+        <!-- 1-TAP DIRECT UPI INTENT APP BUTTONS (ALL POPULAR APPS) -->
+        <div class="space-y-1.5 pt-1">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-black text-slate-300 uppercase tracking-wider flex items-center gap-1">
+              <i class="ph ph-lightning text-amber-400"></i> Tap to Pay with Installed App:
+            </span>
+            <span class="text-[9px] text-emerald-400 font-bold bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">Direct Intent</span>
+          </div>
+          <div class="grid grid-cols-4 gap-2 text-center text-xs">
+            <!-- PhonePe -->
+            <button onclick="launchUpiIntent('phonepe')" class="bg-[#5f259f]/20 hover:bg-[#5f259f]/40 border border-[#5f259f]/60 p-2 rounded-xl flex flex-col items-center gap-1 active:scale-95 transition group">
+              <div class="w-8 h-8 rounded-full bg-[#5f259f] flex items-center justify-center text-white font-black text-sm shadow group-hover:scale-105">
+                <i class="ph ph-device-mobile"></i>
+              </div>
+              <span class="text-[10px] font-bold text-purple-200">PhonePe</span>
+            </button>
+            <!-- Paytm -->
+            <button onclick="launchUpiIntent('paytm')" class="bg-[#002e6e]/30 hover:bg-[#002e6e]/50 border border-[#00baf2]/60 p-2 rounded-xl flex flex-col items-center gap-1 active:scale-95 transition group">
+              <div class="w-8 h-8 rounded-full bg-[#00baf2] flex items-center justify-center text-slate-950 font-black text-sm shadow group-hover:scale-105">
+                <i class="ph ph-wallet"></i>
+              </div>
+              <span class="text-[10px] font-bold text-sky-200">Paytm</span>
+            </button>
+            <!-- Google Pay -->
+            <button onclick="launchUpiIntent('gpay')" class="bg-blue-900/30 hover:bg-blue-900/50 border border-blue-500/60 p-2 rounded-xl flex flex-col items-center gap-1 active:scale-95 transition group">
+              <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-black text-sm shadow group-hover:scale-105">
+                <i class="ph ph-google-logo"></i>
+              </div>
+              <span class="text-[10px] font-bold text-blue-200">GPay</span>
+            </button>
+            <!-- Super.money -->
+            <button onclick="launchUpiIntent('supermoney')" class="bg-emerald-950/40 hover:bg-emerald-950/60 border border-emerald-400/60 p-2 rounded-xl flex flex-col items-center gap-1 active:scale-95 transition group">
+              <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-400 to-teal-500 flex items-center justify-center text-slate-950 font-black text-xs shadow group-hover:scale-105">
+                ₹
+              </div>
+              <span class="text-[10px] font-bold text-emerald-300">Super.money</span>
+            </button>
+            <!-- BharatPe -->
+            <button onclick="launchUpiIntent('bharatpe')" class="bg-cyan-950/40 hover:bg-cyan-950/60 border border-cyan-400/60 p-2 rounded-xl flex flex-col items-center gap-1 active:scale-95 transition group">
+              <div class="w-8 h-8 rounded-full bg-cyan-500 flex items-center justify-center text-slate-950 font-black text-sm shadow group-hover:scale-105">
+                <i class="ph ph-currency-inr"></i>
+              </div>
+              <span class="text-[10px] font-bold text-cyan-200">BharatPe</span>
+            </button>
+            <!-- CRED -->
+            <button onclick="launchUpiIntent('cred')" class="bg-slate-900/80 hover:bg-slate-800 border border-amber-500/40 p-2 rounded-xl flex flex-col items-center gap-1 active:scale-95 transition group">
+              <div class="w-8 h-8 rounded-full bg-slate-950 border border-amber-400 flex items-center justify-center text-amber-300 font-black text-xs shadow group-hover:scale-105">
+                C
+              </div>
+              <span class="text-[10px] font-bold text-amber-200">CRED</span>
+            </button>
+            <!-- BHIM -->
+            <button onclick="launchUpiIntent('bhim')" class="bg-orange-950/30 hover:bg-orange-950/50 border border-orange-500/50 p-2 rounded-xl flex flex-col items-center gap-1 active:scale-95 transition group">
+              <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-orange-500 to-amber-600 flex items-center justify-center text-white font-black text-sm shadow group-hover:scale-105">
+                <i class="ph ph-bank"></i>
+              </div>
+              <span class="text-[10px] font-bold text-orange-200">BHIM</span>
+            </button>
+            <!-- Any UPI (System Chooser) -->
+            <button onclick="launchUpiIntent('upi')" class="bg-amber-500/10 hover:bg-amber-500/20 border border-amber-400/60 p-2 rounded-xl flex flex-col items-center gap-1 active:scale-95 transition group">
+              <div class="w-8 h-8 rounded-full gold-gradient-bg flex items-center justify-center text-slate-950 font-black text-sm shadow group-hover:scale-105">
+                <i class="ph ph-qr-code"></i>
+              </div>
+              <span class="text-[10px] font-bold text-amber-300">All UPI</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- DYNAMIC SCANNABLE QR CODE CONTAINER -->
+        <div class="text-center py-1 space-y-2">
+          <div class="relative w-44 h-44 mx-auto bg-white p-2 rounded-2xl flex items-center justify-center shadow-2xl border-2 border-amber-400">
+            <img id="cashierQrImg" src="" alt="Dynamic UPI QR Code" class="w-full h-full object-contain">
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div class="w-8 h-8 rounded-full gold-gradient-bg flex items-center justify-center font-black text-[9px] text-slate-950 border-2 border-white shadow-md">
+                UPI
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center justify-center gap-2">
+            <p class="text-[11px] text-slate-300 font-semibold">Scan QR using any bank scanner app</p>
+            <label class="text-[10px] text-amber-400 underline cursor-pointer hover:text-amber-300">
+              [Upload Custom QR]
+              <input type="file" accept="image/*" class="hidden" onchange="uploadCustomQr(event)">
+            </label>
+          </div>
+
+          <!-- Official Copyable UPI ID Box -->
+          <div class="bg-brand-surface border border-brand-border rounded-xl p-2.5 flex items-center justify-between text-xs">
+            <div class="text-left truncate pr-2">
+              <span class="text-[10px] text-slate-400 block font-semibold">Official Merchant UPI ID</span>
+              <span class="font-bold text-amber-300 font-mono text-xs select-all" id="merchantUpiDisplay">paytm.s2xraax@pty</span>
+            </div>
+            <button onclick="copyToClipboard('paytm.s2xraax@pty');" class="px-2.5 py-1.5 gold-gradient-bg text-slate-950 font-black rounded-lg text-[10px] active:scale-95 shadow">Copy</button>
+          </div>
+        </div>
+
+        <!-- UTR & Verification Form -->
+        <div class="space-y-2 text-xs">
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-slate-300 font-semibold block">Enter 12-Digit UPI Ref / UTR No. <span class="text-rose-400">*</span></label>
+              <!-- 1-Click Auto-Fill Demo for testing -->
+              <button onclick="simulateDemoUtr()" class="text-[10px] text-amber-400 underline font-mono">Demo Auto-Fill</button>
+            </div>
+            <input id="utrNumberInput" type="text" maxlength="12" placeholder="e.g. 427918492019" class="w-full bg-brand-surface border border-brand-border rounded-xl px-3 py-2 text-sm text-white font-mono outline-none focus:border-amber-400 tracking-wider">
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1 font-semibold">Upload Payment Screenshot (Optional)</label>
+            <input id="screenshotInput" type="file" accept="image/*" class="w-full text-[11px] text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-black file:gold-gradient-bg file:text-slate-950">
+          </div>
+        </div>
+
+        <button onclick="confirmDepositUTR()" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg active:scale-95">
+          Submit UTR & Complete Recharge
+        </button>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- WITHDRAWAL MODAL                                         -->
+    <!-- ======================================================== -->
+    <div id="withdrawModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="bg-brand-card border border-brand-border w-full max-w-[440px] rounded-t-3xl sm:rounded-2xl p-5 space-y-3.5 max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between pb-2 border-b border-brand-border">
+          <h3 class="font-black text-white text-sm flex items-center gap-2">
+            <i class="ph ph-bank text-emerald-400 text-lg"></i> Withdraw Balance to Bank / UPI
+          </h3>
+          <button onclick="closeWithdrawModal()" class="text-slate-400 hover:text-white p-1"><i class="ph ph-x text-lg"></i></button>
+        </div>
+
+        <div class="bg-brand-surface p-3 rounded-xl border border-brand-border flex justify-between items-center text-xs">
+          <span class="text-slate-400 font-semibold">Available for Payout:</span>
+          <span id="withdrawAvailableDisplay" class="font-black text-amber-300 text-sm font-mono">₹0.00</span>
+        </div>
+
+        <div class="space-y-2 text-xs">
+          <div>
+            <label class="text-slate-300 font-semibold block mb-1">Destination Bank Account / UPI VPA</label>
+            <input id="withdrawAccountInput" type="text" value="9876543210@paytm" placeholder="Account Number or UPI ID" class="w-full bg-brand-surface border border-brand-border rounded-xl px-3 py-2 text-white outline-none focus:border-amber-400 font-mono">
+          </div>
+          <div>
+            <label class="text-slate-300 font-semibold block mb-1">Beneficiary Name</label>
+            <input id="withdrawNameInput" type="text" value="PRANIT PANDEWAR" placeholder="Full name on bank account" class="w-full bg-brand-surface border border-brand-border rounded-xl px-3 py-2 text-white outline-none focus:border-amber-400">
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-slate-300 font-semibold block">Withdrawal Amount (Min ₹110)</label>
+              <span class="text-[10px] text-emerald-400 font-mono">0% IMPS Fee</span>
+            </div>
+            <input id="withdrawAmountInput" type="number" value="200" placeholder="Enter amount" class="w-full bg-brand-surface border border-brand-border rounded-xl px-3 py-2 text-white font-mono font-bold outline-none focus:border-amber-400">
+          </div>
+        </div>
+
+        <button onclick="processWithdrawal()" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg active:scale-95">
+          Submit Payout Request
+        </button>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- GAME 1: WIN GO 1-MINUTE PREDICTION                       -->
+    <!-- ======================================================== -->
+    <div id="gameModal-wingo" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex flex-col max-w-[480px] mx-auto overflow-y-auto">
+      <div class="bg-brand-card border-b border-brand-border p-3 flex items-center justify-between sticky top-0 z-10">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-lg bg-rose-600 flex items-center justify-center font-black text-white text-xs">WG</div>
+          <span class="font-black text-sm text-white">Win Go 1-Minute</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-bold text-amber-300 font-mono" id="wingoWalletDisplay">₹0.00</span>
+          <button onclick="closeGame('wingo')" class="text-slate-400 hover:text-white p-1"><i class="ph ph-x text-lg"></i></button>
+        </div>
+      </div>
+
+      <div class="p-3 space-y-3">
+        <!-- Period and Countdown Box -->
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-4 flex items-center justify-between shadow">
+          <div>
+            <span class="text-[10px] text-slate-400 block font-semibold">Period Number</span>
+            <span id="wingoPeriodId" class="font-mono text-sm font-black text-slate-200">2026092601</span>
+          </div>
+          <div class="text-right">
+            <span class="text-[10px] text-slate-400 block font-semibold">Time Remaining</span>
+            <div id="wingoTimer" class="font-mono text-xl font-black text-amber-400 tracking-wider">00:30</div>
+          </div>
+        </div>
+
+        <!-- Color Prediction Buttons -->
+        <div class="grid grid-cols-3 gap-2 text-center text-xs font-black">
+          <button onclick="openBetSlip('color', 'Green', 2)" class="py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white shadow-md active:scale-95">Green (2x)</button>
+          <button onclick="openBetSlip('color', 'Violet', 4.5)" class="py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white shadow-md active:scale-95">Violet (4.5x)</button>
+          <button onclick="openBetSlip('color', 'Red', 2)" class="py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white shadow-md active:scale-95">Red (2x)</button>
+        </div>
+
+        <!-- 0-9 Numbers Grid -->
+        <div class="bg-brand-card border border-brand-border p-3.5 rounded-2xl space-y-2">
+          <span class="text-[11px] text-slate-400 font-bold block">Select Number (9x Payout)</span>
+          <div class="grid grid-cols-5 gap-2 text-center font-black">
+            <button onclick="openBetSlip('number', 0, 9)" class="h-10 rounded-xl split-red-violet text-white flex items-center justify-center text-sm shadow hover:scale-105 active:scale-95">0</button>
+            <button onclick="openBetSlip('number', 1, 9)" class="h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-sm shadow hover:scale-105 active:scale-95">1</button>
+            <button onclick="openBetSlip('number', 2, 9)" class="h-10 rounded-xl bg-rose-600 text-white flex items-center justify-center text-sm shadow hover:scale-105 active:scale-95">2</button>
+            <button onclick="openBetSlip('number', 3, 9)" class="h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-sm shadow hover:scale-105 active:scale-95">3</button>
+            <button onclick="openBetSlip('number', 4, 9)" class="h-10 rounded-xl bg-rose-600 text-white flex items-center justify-center text-sm shadow hover:scale-105 active:scale-95">4</button>
+            <button onclick="openBetSlip('number', 5, 9)" class="h-10 rounded-xl split-green-violet text-white flex items-center justify-center text-sm shadow hover:scale-105 active:scale-95">5</button>
+            <button onclick="openBetSlip('number', 6, 9)" class="h-10 rounded-xl bg-rose-600 text-white flex items-center justify-center text-sm shadow hover:scale-105 active:scale-95">6</button>
+            <button onclick="openBetSlip('number', 7, 9)" class="h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-sm shadow hover:scale-105 active:scale-95">7</button>
+            <button onclick="openBetSlip('number', 8, 9)" class="h-10 rounded-xl bg-rose-600 text-white flex items-center justify-center text-sm shadow hover:scale-105 active:scale-95">8</button>
+            <button onclick="openBetSlip('number', 9, 9)" class="h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-sm shadow hover:scale-105 active:scale-95">9</button>
+          </div>
+        </div>
+
+        <!-- Big / Small Buttons -->
+        <div class="grid grid-cols-2 gap-2 text-center text-xs font-black">
+          <button onclick="openBetSlip('size', 'Big', 2)" class="py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 shadow active:scale-95">Big (5-9)</button>
+          <button onclick="openBetSlip('size', 'Small', 2)" class="py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white shadow active:scale-95">Small (0-4)</button>
+        </div>
+
+        <!-- Recent Draw History Table -->
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-3 space-y-2">
+          <span class="text-xs font-black text-white block">Recent Draw Results</span>
+          <div class="overflow-x-auto">
+            <table class="w-full text-[11px] text-center">
+              <thead class="text-slate-400 border-b border-brand-border">
+                <tr><th class="py-1">Period</th><th>Number</th><th>Size</th><th>Color</th></tr>
+              </thead>
+              <tbody id="wingoHistoryBody" class="divide-y divide-brand-border text-slate-300 font-mono">
+                <!-- Dynamically populated past rounds -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Win Go Dynamic Bet Slip Bottom Sheet -->
+    <div id="betSlipModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-end justify-center p-0">
+      <div class="bg-brand-card border-t border-brand-border w-full max-w-[480px] rounded-t-3xl p-4 space-y-3">
+        <div class="flex items-center justify-between pb-1 border-b border-brand-border">
+          <div>
+            <h4 class="font-black text-white text-sm">Bet Selection: <span id="betSlipTarget" class="text-amber-400">Red</span></h4>
+            <span class="text-[10px] text-slate-400">Multiplier: <span id="betSlipMult" class="font-mono text-emerald-400">2.0x</span></span>
+          </div>
+          <button onclick="closeBetSlip()" class="text-slate-400 hover:text-white p-1"><i class="ph ph-x text-lg"></i></button>
+        </div>
+
+        <!-- Chip Presets -->
+        <div>
+          <span class="text-[10px] text-slate-400 font-semibold block mb-1">Contract Money (Chip)</span>
+          <div class="grid grid-cols-5 gap-1.5 text-xs font-mono font-bold text-center">
+            <button onclick="selectChip(10, this)" class="chip-btn py-1.5 rounded-lg border-2 border-amber-400 bg-amber-500/10 text-amber-300">₹10</button>
+            <button onclick="selectChip(50, this)" class="chip-btn py-1.5 rounded-lg bg-brand-surface border border-brand-border text-slate-300">₹50</button>
+            <button onclick="selectChip(100, this)" class="chip-btn py-1.5 rounded-lg bg-brand-surface border border-brand-border text-slate-300">₹100</button>
+            <button onclick="selectChip(500, this)" class="chip-btn py-1.5 rounded-lg bg-brand-surface border border-brand-border text-slate-300">₹500</button>
+            <button onclick="selectChip(1000, this)" class="chip-btn py-1.5 rounded-lg bg-brand-surface border border-brand-border text-slate-300">₹1,000</button>
+          </div>
+        </div>
+
+        <!-- Quantity Multipliers -->
+        <div class="flex items-center justify-between text-xs">
+          <span class="text-slate-400 font-semibold">Quantity / Multiplier</span>
+          <div class="flex items-center gap-2">
+            <button onclick="adjustQuantity(-1)" class="w-7 h-7 rounded-lg bg-brand-surface border border-brand-border font-black text-slate-200">-</button>
+            <span id="betSlipQuantity" class="w-8 text-center font-bold text-white font-mono">1</span>
+            <button onclick="adjustQuantity(1)" class="w-7 h-7 rounded-lg bg-brand-surface border border-brand-border font-black text-slate-200">+</button>
+          </div>
+        </div>
+
+        <button onclick="confirmWingoBet()" class="w-full py-3 rounded-xl gold-gradient-bg text-slate-950 font-black text-xs uppercase tracking-wider shadow active:scale-95">
+          Confirm Bet ₹<span id="betSlipTotalDisplay">10.00</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- GAME 2: AVIATOR CRASH                                    -->
+    <!-- ======================================================== -->
+    <div id="gameModal-aviator" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex flex-col max-w-[480px] mx-auto">
+      <div class="bg-brand-card border-b border-brand-border p-3 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i class="ph ph-airplane-takeoff text-rose-500 text-xl"></i>
+          <span class="font-black text-sm text-white">Aviator Crash</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-bold text-amber-300 font-mono" id="aviatorWalletDisplay">₹0.00</span>
+          <button onclick="closeGame('aviator')" class="text-slate-400 hover:text-white p-1"><i class="ph ph-x text-lg"></i></button>
+        </div>
+      </div>
+
+      <div class="p-3 space-y-3 flex-1 flex flex-col">
+        <!-- Previous Crash Ribbons -->
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 text-[10px] font-mono font-bold" id="aviatorHistoryRibbon">
+          <span class="px-2 py-0.5 rounded-full bg-blue-950/80 text-blue-400 border border-blue-500/40">1.84x</span>
+          <span class="px-2 py-0.5 rounded-full bg-purple-950/80 text-purple-400 border border-purple-500/40">3.20x</span>
+          <span class="px-2 py-0.5 rounded-full bg-blue-950/80 text-blue-400 border border-blue-500/40">1.12x</span>
+          <span class="px-2 py-0.5 rounded-full bg-amber-950/80 text-amber-400 border border-amber-500/40">12.45x</span>
+        </div>
+
+        <!-- Flight Curve Display Canvas -->
+        <div class="relative bg-slate-950 border border-brand-border rounded-2xl h-56 flex items-center justify-center overflow-hidden shadow-inner">
+          <canvas id="aviatorCanvas" width="400" height="220" class="w-full h-full"></canvas>
+          <div class="absolute text-center pointer-events-none">
+            <div id="aviatorMultiplierText" class="font-black text-4xl text-white tracking-wider font-mono">1.00x</div>
+            <div id="aviatorStatusSubtext" class="text-xs text-slate-400 font-semibold mt-1">Waiting next flight...</div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-4 space-y-3">
+          <div class="flex items-center justify-between text-xs">
+            <span class="text-slate-300 font-semibold">Stake Amount:</span>
+            <div class="flex items-center gap-2">
+              <button onclick="adjustAviatorBet(-10)" class="w-8 h-8 rounded-lg bg-brand-surface text-slate-200 font-black text-sm">-</button>
+              <input id="aviatorBetInput" type="number" value="20" class="w-20 bg-brand-surface border border-brand-border rounded-lg text-center text-white font-mono font-bold py-1.5 outline-none">
+              <button onclick="adjustAviatorBet(10)" class="w-8 h-8 rounded-lg bg-brand-surface text-slate-200 font-black text-sm">+</button>
+            </div>
+          </div>
+          <button id="aviatorActionBtn" onclick="handleAviatorAction()" class="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-sm uppercase tracking-wider shadow-lg active:scale-98">
+            PLACE BET (₹20)
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- GAME 3: MINES 5x5 STRATEGY                               -->
+    <!-- ======================================================== -->
+    <div id="gameModal-mines" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex flex-col max-w-[480px] mx-auto">
+      <div class="bg-brand-card border-b border-brand-border p-3 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i class="ph ph-diamond text-sky-400 text-xl"></i>
+          <span class="font-black text-sm text-white">Mines 5x5</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-bold text-amber-300 font-mono" id="minesWalletDisplay">₹0.00</span>
+          <button onclick="closeGame('mines')" class="text-slate-400 hover:text-white p-1"><i class="ph ph-x text-lg"></i></button>
+        </div>
+      </div>
+
+      <div class="p-3 space-y-3 flex-1 flex flex-col items-center">
+        <!-- 5x5 Grid Board -->
+        <div id="minesGrid" class="grid grid-cols-5 gap-2 p-3 bg-brand-card border border-brand-border rounded-2xl w-full aspect-square">
+          <!-- 25 squares dynamically generated -->
+        </div>
+
+        <div class="w-full bg-brand-card border border-brand-border rounded-2xl p-4 space-y-3">
+          <div class="flex items-center justify-between text-xs">
+            <span class="text-slate-300 font-semibold">Total Mines:</span>
+            <select id="minesCountSelect" class="bg-brand-surface border border-brand-border rounded-lg px-2.5 py-1 text-white font-bold outline-none">
+              <option value="3">3 Mines (Safe)</option>
+              <option value="5">5 Mines (Medium)</option>
+              <option value="10">10 Mines (High Risk)</option>
+            </select>
+          </div>
+          <div class="flex items-center justify-between text-xs">
+            <span class="text-slate-300 font-semibold">Bet Stake:</span>
+            <div class="flex items-center gap-2">
+              <input id="minesBetInput" type="number" value="50" class="w-24 bg-brand-surface border border-brand-border rounded-lg text-center text-white font-mono font-bold py-1 outline-none">
+              <button onclick="autoPickSafeMinesTile()" id="autoPickBtn" class="px-2 py-1 bg-brand-surface border border-brand-border rounded-lg text-[10px] text-amber-300 font-bold active:scale-95">Auto Pick</button>
+            </div>
+          </div>
+          <button id="minesActionBtn" onclick="startOrCashoutMines()" class="w-full py-3 rounded-xl gold-gradient-bg text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg active:scale-95">
+            START GAME (₹50)
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- GAME 4: FORTUNE 777 SLOTS                                -->
+    <!-- ======================================================== -->
+    <div id="gameModal-slots" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex flex-col max-w-[480px] mx-auto">
+      <div class="bg-brand-card border-b border-brand-border p-3 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i class="ph ph-coins text-amber-400 text-xl"></i>
+          <span class="font-black text-sm text-white">Fortune 777 Slots</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-bold text-amber-300 font-mono" id="slotsWalletDisplay">₹0.00</span>
+          <button onclick="closeGame('slots')" class="text-slate-400 hover:text-white p-1"><i class="ph ph-x text-lg"></i></button>
+        </div>
+      </div>
+
+      <div class="p-4 space-y-5 flex-1 flex flex-col justify-center items-center">
+        <!-- Slot Frame -->
+        <div class="w-full bg-gradient-to-b from-amber-600 via-amber-800 to-brand-card p-4 rounded-3xl border-4 border-amber-400 shadow-2xl space-y-4">
+          <div class="grid grid-cols-3 gap-3 bg-slate-950 p-4 rounded-2xl border-2 border-amber-500/50 overflow-hidden">
+            <div id="reel1" class="h-28 bg-brand-dark rounded-xl flex items-center justify-center text-4xl shadow-inner border border-slate-700">7️⃣</div>
+            <div id="reel2" class="h-28 bg-brand-dark rounded-xl flex items-center justify-center text-4xl shadow-inner border border-slate-700">7️⃣</div>
+            <div id="reel3" class="h-28 bg-brand-dark rounded-xl flex items-center justify-center text-4xl shadow-inner border border-slate-700">7️⃣</div>
+          </div>
+          <div id="slotsResultText" class="text-center text-xs font-black text-amber-300 h-4">Match 3 identical symbols to win up to 50x!</div>
+        </div>
+
+        <button id="spinSlotBtn" onclick="spinSlotsMachine()" class="w-full py-4 rounded-2xl gold-gradient-bg text-slate-950 font-black text-sm uppercase tracking-wider shadow-xl active:scale-98">
+          SPIN REELS (₹20)
+        </button>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- GAME 5: DRAGON VS TIGER CARDS                            -->
+    <!-- ======================================================== -->
+    <div id="gameModal-dragontiger" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex flex-col max-w-[480px] mx-auto">
+      <div class="bg-brand-card border-b border-brand-border p-3 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i class="ph ph-cards text-rose-400 text-xl"></i>
+          <span class="font-black text-sm text-white">Dragon vs Tiger</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-bold text-amber-300 font-mono" id="dtWalletDisplay">₹0.00</span>
+          <button onclick="closeGame('dragontiger')" class="text-slate-400 hover:text-white p-1"><i class="ph ph-x text-lg"></i></button>
+        </div>
+      </div>
+
+      <div class="p-3 space-y-4 flex-1 flex flex-col justify-center">
+        <!-- Duel Cards Arena -->
+        <div class="grid grid-cols-2 gap-3 text-center">
+          <div class="bg-brand-card border border-rose-500/40 rounded-2xl p-4 shadow space-y-2">
+            <span class="font-black text-rose-400 text-sm">DRAGON</span>
+            <div id="dragonCardDisplay" class="h-28 w-20 mx-auto bg-slate-900 border-2 border-rose-500 rounded-xl flex items-center justify-center text-3xl font-black text-white font-mono shadow-inner">
+              🂠
+            </div>
+            <span id="dragonScore" class="text-xs text-slate-400 font-mono font-bold">-</span>
+          </div>
+
+          <div class="bg-brand-card border border-amber-500/40 rounded-2xl p-4 shadow space-y-2">
+            <span class="font-black text-amber-400 text-sm">TIGER</span>
+            <div id="tigerCardDisplay" class="h-28 w-20 mx-auto bg-slate-900 border-2 border-amber-500 rounded-xl flex items-center justify-center text-3xl font-black text-white font-mono shadow-inner">
+              🂠
+            </div>
+            <span id="tigerScore" class="text-xs text-slate-400 font-mono font-bold">-</span>
+          </div>
+        </div>
+
+        <div id="dtResultBanner" class="text-center font-black text-sm text-amber-300 h-5">Pick your side to duel!</div>
+
+        <!-- Betting Targets -->
+        <div class="grid grid-cols-3 gap-2 text-center text-xs font-black">
+          <button onclick="placeDragonTigerBet('Dragon', 2)" class="py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white shadow active:scale-95">Dragon (2x)</button>
+          <button onclick="placeDragonTigerBet('Tie', 9)" class="py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white shadow active:scale-95">Tie (9x)</button>
+          <button onclick="placeDragonTigerBet('Tiger', 2)" class="py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 shadow active:scale-95">Tiger (2x)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- INTERACTIVE 24/7 IN-APP LIVE SUPPORT CHAT MODAL          -->
+    <!-- ======================================================== -->
+    <div id="liveChatModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex flex-col max-w-[480px] mx-auto">
+      <!-- Chat Header -->
+      <div class="bg-brand-card border-b border-brand-border p-3 flex items-center justify-between sticky top-0 z-10">
+        <div class="flex items-center gap-2.5">
+          <div class="relative">
+            <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-sky-400 to-blue-600 flex items-center justify-center text-white font-black text-sm shadow">
+              <i class="ph ph-headset"></i>
+            </div>
+            <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-brand-card"></span>
+          </div>
+          <div>
+            <h4 class="font-black text-xs text-white">Legacy Win Support (Agent Priya)</h4>
+            <span class="text-[10px] text-emerald-400 font-semibold">Active &bull; Avg response &lt; 1 min</span>
+          </div>
+        </div>
+        <button onclick="closeLiveChatModal()" class="text-slate-400 hover:text-white p-1">
+          <i class="ph ph-x text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Quick Preset Problem Chips -->
+      <div class="bg-brand-surface/90 border-b border-brand-border/60 p-2 flex gap-1.5 overflow-x-auto no-scrollbar text-[11px]">
+        <button onclick="sendPresetChat('My UPI recharge is pending, please check!')" class="px-2.5 py-1 rounded-full bg-brand-card hover:bg-slate-800 border border-brand-border text-amber-300 font-bold whitespace-nowrap active:scale-95">
+          ⚡ Recharge Pending
+        </button>
+        <button onclick="sendPresetChat('When will my withdrawal arrive in bank?')" class="px-2.5 py-1 rounded-full bg-brand-card hover:bg-slate-800 border border-brand-border text-emerald-300 font-bold whitespace-nowrap active:scale-95">
+          🏦 Withdrawal Delay
+        </button>
+        <button onclick="sendPresetChat('Can I get today\'s official prediction gift code?')" class="px-2.5 py-1 rounded-full bg-brand-card hover:bg-slate-800 border border-brand-border text-sky-300 font-bold whitespace-nowrap active:scale-95">
+          🎁 Gift Code Help
+        </button>
+      </div>
+
+      <!-- Chat History Body -->
+      <div id="liveChatMessages" class="flex-1 p-3 overflow-y-auto space-y-3 text-xs">
+        <!-- Agent Greeting -->
+        <div class="flex items-start gap-2">
+          <div class="w-6 h-6 rounded-full bg-sky-500 text-slate-950 font-black text-[10px] flex items-center justify-center flex-shrink-0 mt-1">CS</div>
+          <div class="bg-brand-card border border-brand-border p-3 rounded-2xl rounded-tl-none max-w-[82%] text-slate-200 space-y-1 shadow">
+            <span class="text-[10px] font-black text-amber-400 block">Customer Specialist Priya</span>
+            <p>Namaste! 🙏 Welcome to LEGACY WIN Official 24/7 Support Desk. How can I assist you with your account or recharge today?</p>
+            <span class="text-[9px] text-slate-500 block text-right">Just now</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Typing Indicator (Hidden by default) -->
+      <div id="chatTypingIndicator" class="px-4 py-1 text-[11px] text-slate-400 font-semibold hidden items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-sky-400 animate-ping"></span> Agent Priya is typing...
+      </div>
+
+      <!-- Chat Bottom Input Bar -->
+      <div class="bg-brand-card border-t border-brand-border p-2.5 flex items-center gap-2">
+        <input id="chatMessageInput" type="text" placeholder="Type your issue or UTR number..." class="flex-1 bg-brand-surface border border-brand-border rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-sky-400" onkeydown="if(event.key==='Enter') sendUserChatMessage()">
+        <button onclick="sendUserChatMessage()" class="w-9 h-9 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-black flex items-center justify-center text-base shadow active:scale-95">
+          <i class="ph ph-paper-plane-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- FLOATING 24/7 TELEGRAM QUICK-ACCESS BUTTON -->
+    <div class="fixed bottom-20 right-4 z-40 flex flex-col items-center gap-1">
+      <button onclick="openSubScreen('support')" class="w-12 h-12 rounded-full bg-gradient-to-tr from-sky-500 via-blue-600 to-indigo-600 text-white flex items-center justify-center text-2xl shadow-2xl hover:scale-105 active:scale-95 border-2 border-white/30" title="24/7 Telegram Customer Support">
+        <i class="ph ph-telegram-logo font-bold"></i>
+      </button>
+      <span class="text-[9px] font-black bg-slate-950/90 text-sky-300 px-1.5 py-0.5 rounded shadow border border-sky-400/30">Telegram</span>
+    </div>
+
+    <!-- Fixed Bottom 5-Tab Navigation Bar -->
+    <nav class="fixed bottom-0 max-w-[480px] w-full bg-brand-dark/95 backdrop-blur-md border-t border-brand-border/80 z-40">
+      <div class="grid grid-cols-5 items-center px-1 py-1.5 text-[10px]">
+        
+        <!-- Tab 1: Home -->
+        <button onclick="switchTab('home')" id="nav-btn-home" class="nav-item flex flex-col items-center gap-0.5 text-amber-400 font-bold transition">
+          <i class="ph ph-house text-xl"></i>
+          <span>Home</span>
+        </button>
+
+        <!-- Tab 2: Activity -->
+        <button onclick="switchTab('activity')" id="nav-btn-activity" class="nav-item flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition">
+          <i class="ph ph-gift text-xl"></i>
+          <span>Activity</span>
+        </button>
+
+        <!-- Tab 3: Center Elevated Wheel Button ("Get ₹500") -->
+        <button onclick="switchTab('wheel')" id="nav-btn-wheel" class="flex flex-col items-center -mt-5 group">
+          <div class="w-13 h-13 p-3 rounded-full gold-gradient-bg text-slate-950 shadow-2xl pulse-gold flex items-center justify-center border-4 border-brand-dark">
+            <i class="ph ph-aperture text-2xl font-black"></i>
+          </div>
+          <span class="text-[9px] font-black text-amber-300 mt-0.5">₹500 Spin</span>
+        </button>
+
+        <!-- Tab 4: Promotion -->
+        <button onclick="switchTab('promotion')" id="nav-btn-promotion" class="nav-item flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition">
+          <i class="ph ph-users text-xl"></i>
+          <span>Invite</span>
+        </button>
+
+        <!-- Tab 5: Account -->
+        <button onclick="switchTab('account')" id="nav-btn-account" class="nav-item flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200 transition">
+          <i class="ph ph-user text-xl"></i>
+          <span>Account</span>
+        </button>
+
+      </div>
+    </nav>
+
+    <!-- Global Toast Alert Popup -->
+    <div id="toastNotification" class="fixed top-14 left-1/2 -translate-x-1/2 z-50 bg-black/95 text-amber-300 border border-amber-400/80 px-4 py-2 rounded-full text-xs font-black shadow-2xl pointer-events-none transition-opacity duration-300 opacity-0 flex items-center gap-2">
+      <i class="ph ph-info font-black"></i>
+      <span id="toastMsgText">Notification</span>
+    </div>
+
+  </div>
+
+  <script>
+    // Global User & Application State
+    const state = {
+      balance: 0.00,
+      freeSpins: 3,
+      wheelProgress: 482.50,
+      activeTab: 'home',
+      activeCategory: 'popular',
+      activeGame: null,
+      history: [
+        { desc: 'Welcome Signup Bonus', amt: 0.00, type: 'credit', time: 'Just now' }
+      ],
+      betHistory: [
+        { game: 'Win Go 1M', select: 'Red', bet: 20, payout: 40, status: 'WIN' },
+        { game: 'Aviator', select: '2.40x', bet: 20, payout: 48, status: 'WIN' }
+      ]
+    };
+
+    // Official Merchant Configuration
+    const MERCHANT_CONFIG = {
+      upiId: 'paytm.s2xraax@pty',
+      merchantName: 'Legacy Win',
+      pn: 'Legacy Win'
+    };
+
+    // 8-Category Games Catalog Database
+    const gamesDatabase = {
+      popular: [
+        { name: 'Win Go 1-Min', tag: 'Color Prediction', badge: 'HOT', color: 'from-rose-600 via-purple-600 to-emerald-600', icon: 'ph-chart-polar', playable: 'wingo' },
+        { name: 'Aviator Crash', tag: 'Crash Rocket', badge: 'POPULAR', color: 'from-red-600 to-amber-600', icon: 'ph-airplane-takeoff', playable: 'aviator' },
+        { name: 'Mines 5x5', tag: 'Diamond Hunter', badge: 'HIGH RTP', color: 'from-sky-600 to-blue-800', icon: 'ph-diamond', playable: 'mines' },
+        { name: 'Fortune 777 Slots', tag: '3-Reel Jackpot', badge: 'JACKPOT', color: 'from-amber-500 to-yellow-700', icon: 'ph-coins', playable: 'slots' },
+        { name: 'Dragon vs Tiger', tag: 'Card Duel', badge: 'LIVE', color: 'from-rose-500 to-red-800', icon: 'ph-cards', playable: 'dragontiger' },
+        { name: 'Trx Win Go', tag: 'Blockchain Lottery', badge: 'INSTANT', color: 'from-cyan-600 to-blue-700', icon: 'ph-cube', playable: 'wingo' }
+      ],
+      lottery: [
+        { name: 'Win Go 30-Sec', tag: 'Rapid Lottery', badge: 'FAST', color: 'from-purple-600 to-pink-600', icon: 'ph-hourglass', playable: 'wingo' },
+        { name: 'Win Go 1-Min', tag: 'Official Round', badge: 'POPULAR', color: 'from-rose-600 to-emerald-600', icon: 'ph-chart-polar', playable: 'wingo' },
+        { name: 'Win Go 3-Min', tag: 'Strategy Draw', badge: 'STABLE', color: 'from-amber-600 to-yellow-600', icon: 'ph-timer', playable: 'wingo' },
+        { name: '5D Lottery', tag: 'Number Match', badge: '99x', color: 'from-blue-600 to-indigo-700', icon: 'ph-dice-five', playable: 'wingo' }
+      ],
+      slots: [
+        { name: 'Fortune 777', tag: 'Classic Slots', badge: 'JACKPOT', color: 'from-amber-500 to-yellow-700', icon: 'ph-coins', playable: 'slots' },
+        { name: 'Gates of Olympus', tag: 'Zeus Multipliers', badge: '500x', color: 'from-yellow-600 to-amber-800', icon: 'ph-lightning', playable: 'slots' },
+        { name: 'Sweet Bonanza', tag: 'Candy Cascade', badge: 'HOT', color: 'from-pink-500 to-rose-600', icon: 'ph-cookie', playable: 'slots' },
+        { name: 'JDB Gold Egg', tag: 'Provider Classic', badge: 'POPULAR', color: 'from-emerald-600 to-teal-800', icon: 'ph-egg', playable: 'slots' }
+      ],
+      casino: [
+        { name: 'Dragon vs Tiger', tag: 'Real Duel', badge: 'LIVE', color: 'from-rose-600 to-red-800', icon: 'ph-cards', playable: 'dragontiger' },
+        { name: 'Live Roulette', tag: 'European Wheel', badge: 'VIP', color: 'from-red-700 to-slate-900', icon: 'ph-circle-dashed', playable: null },
+        { name: 'Baccarat VIP', tag: 'Player vs Banker', badge: 'HIGH STAKES', color: 'from-blue-800 to-slate-900', icon: 'ph-crown', playable: null },
+        { name: 'Andar Bahar', tag: 'Desi Favorite', badge: 'INSTANT', color: 'from-amber-600 to-orange-700', icon: 'ph-cards', playable: null }
+      ],
+      original: [
+        { name: 'Aviator Crash', tag: 'Cashout Rocket', badge: '100x', color: 'from-rose-600 to-amber-600', icon: 'ph-airplane-takeoff', playable: 'aviator' },
+        { name: 'Mines 5x5', tag: 'Diamond Safe', badge: 'FAVORITE', color: 'from-sky-600 to-blue-800', icon: 'ph-diamond', playable: 'mines' },
+        { name: 'Plinko Ball', tag: 'Pyramid Bounce', badge: 'NEW', color: 'from-violet-600 to-purple-800', icon: 'ph-circles-three', playable: null },
+        { name: 'Limbo Rocket', tag: 'Target Escape', badge: 'TURBO', color: 'from-emerald-600 to-teal-700', icon: 'ph-rocket', playable: null }
+      ],
+      sports: [
+        { name: 'Cricket Live T20', tag: 'IPL & Match Winner', badge: 'POPULAR', color: 'from-blue-600 to-sky-700', icon: 'ph-baseball', playable: null },
+        { name: 'Football League', tag: 'Premier League Live', badge: 'ODDS', color: 'from-emerald-600 to-green-700', icon: 'ph-soccer-ball', playable: null },
+        { name: 'Tennis Open', tag: 'Live Sets', badge: 'FAST', color: 'from-yellow-600 to-amber-700', icon: 'ph-tennis-ball', playable: null }
+      ],
+      rummy: [
+        { name: 'Points Rummy', tag: '13 Cards Fast', badge: 'DESI', color: 'from-rose-600 to-purple-700', icon: 'ph-diamond', playable: null },
+        { name: 'Pool Rummy 101', tag: 'Elimination Duel', badge: 'PRO', color: 'from-purple-700 to-indigo-800', icon: 'ph-cards', playable: null },
+        { name: 'Teen Patti Live', tag: '3 Patti King', badge: 'HOT', color: 'from-amber-600 to-rose-700', icon: 'ph-crown', playable: null }
+      ],
+      fishing: [
+        { name: 'Ocean King 3D', tag: 'Harpoon Master', badge: '3D', color: 'from-cyan-600 to-blue-700', icon: 'ph-fish', playable: null },
+        { name: 'Bombing Fishing', tag: 'Mega Cannon', badge: 'BONUS', color: 'from-teal-600 to-emerald-700', icon: 'ph-waves', playable: null }
+      ]
+    };
+
+    // Synthesized Web Audio API Tones
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playBeep(freq = 440, type = 'sine', duration = 0.1) {
+      try {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotification');
+      document.getElementById('toastMsgText').innerText = msg;
+      toast.classList.remove('opacity-0');
+      setTimeout(() => toast.classList.add('opacity-0'), 2600);
+    }
+
+    function copyToClipboard(text) {
+      const tempInput = document.createElement('textarea');
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      try {
+        document.execCommand('copy');
+        showToast(`Copied: ${text}`);
+      } catch (err) {
+        showToast('Copied to clipboard');
+      }
+      document.body.removeChild(tempInput);
+    }
+
+    function updateBalanceUI() {
+      const formatted = `₹${state.balance.toFixed(2)}`;
+      const hBal = document.getElementById('headerBalance');
+      if (hBal) hBal.innerText = formatted;
+      const accBal = document.getElementById('accountTotalBalance');
+      if (accBal) accBal.innerText = formatted;
+      const withBal = document.getElementById('withdrawAvailableDisplay');
+      if (withBal) withBal.innerText = formatted;
+      const wBal = document.getElementById('wingoWalletDisplay');
+      if (wBal) wBal.innerText = formatted;
+      const aBal = document.getElementById('aviatorWalletDisplay');
+      if (aBal) aBal.innerText = formatted;
+      const mBal = document.getElementById('minesWalletDisplay');
+      if (mBal) mBal.innerText = formatted;
+      const sBal = document.getElementById('slotsWalletDisplay');
+      if (sBal) sBal.innerText = formatted;
+      const dtW = document.getElementById('dtWalletDisplay');
+      if (dtW) dtW.innerText = formatted;
+    }
+
+    function addTransaction(desc, amt, type = 'credit') {
+      state.history.unshift({ desc, amt, type, time: 'Just now' });
+      renderHistory();
+      renderFullLedger();
+    }
+
+    function renderHistory() {
+      const container = document.getElementById('txHistoryContainer');
+      if (!container) return;
+      container.innerHTML = state.history.slice(0, 5).map(item => `
+        <div class="flex justify-between items-center py-1.5 border-b border-brand-border/60">
+          <div>
+            <span class="font-bold ${item.type === 'credit' ? 'text-emerald-400' : 'text-rose-400'}">${item.desc}</span>
+            <span class="block text-[10px] text-slate-400">${item.time}</span>
+          </div>
+          <span class="font-bold font-mono ${item.type === 'credit' ? 'text-emerald-400' : 'text-rose-400'}">${item.type === 'credit' ? '+' : '-'}₹${item.amt.toFixed(2)}</span>
+        </div>
+      `).join('');
+    }
+
+    function renderFullLedger() {
+      const container = document.getElementById('fullLedgerContainer');
+      if (!container) return;
+      container.innerHTML = state.history.map(item => `
+        <div class="bg-brand-card border border-brand-border p-3 rounded-xl flex justify-between items-center">
+          <div>
+            <span class="font-bold ${item.type === 'credit' ? 'text-emerald-400' : 'text-rose-400'} block">${item.desc}</span>
+            <span class="text-[10px] text-slate-400 font-mono">Ref: TXN${Math.floor(Math.random()*899999+100000)} | ${item.time}</span>
+          </div>
+          <span class="font-bold font-mono text-sm ${item.type === 'credit' ? 'text-emerald-400' : 'text-rose-400'}">${item.type === 'credit' ? '+' : '-'}₹${item.amt.toFixed(2)}</span>
+        </div>
+      `).join('');
+    }
+
+    function renderBetRecords() {
+      const tbody = document.getElementById('betRecordsTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = state.betHistory.map(b => `
+        <tr>
+          <td class="py-2.5 font-bold text-white">${b.game}</td>
+          <td><span class="text-amber-300 font-bold">${b.select}</span></td>
+          <td>₹${b.bet.toFixed(2)}</td>
+          <td class="font-bold ${b.status === 'WIN' ? 'text-emerald-400' : 'text-rose-400'}">${b.status === 'WIN' ? '+' : ''}₹${b.payout.toFixed(2)}</td>
+          <td><span class="px-2 py-0.5 rounded ${b.status === 'WIN' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'} text-[10px] font-black">${b.status}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    // Tab Switching
+    function switchTab(tabId) {
+      playBeep(600);
+      document.querySelectorAll('.sub-view-panel').forEach(p => p.classList.add('hidden'));
+      document.querySelectorAll('.view-panel').forEach(p => p.classList.add('hidden'));
+      document.querySelectorAll('.nav-item').forEach(b => {
+        b.classList.remove('text-amber-400', 'font-bold');
+        b.classList.add('text-slate-400');
+      });
+
+      const targetTab = document.getElementById(`tab-${tabId}`);
+      if (targetTab) targetTab.classList.remove('hidden');
+
+      const activeBtn = document.getElementById(`nav-btn-${tabId}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('text-slate-400');
+        activeBtn.classList.add('text-amber-400', 'font-bold');
+      }
+      if (tabId === 'wheel') drawAccumulatorWheel();
+    }
+
+    // Sub-Screen Controls
+    function openSubScreen(screenId) {
+      playBeep(500);
+      document.querySelectorAll('.view-panel').forEach(p => p.classList.add('hidden'));
+      document.querySelectorAll('.sub-view-panel').forEach(p => p.classList.add('hidden'));
+      const targetScreen = document.getElementById(`subscreen-${screenId}`);
+      if (targetScreen) targetScreen.classList.remove('hidden');
+      if (screenId === 'wallet-history') renderFullLedger();
+      if (screenId === 'records') renderBetRecords();
+    }
+
+    function closeSubScreen(screenId) {
+      const targetScreen = document.getElementById(`subscreen-${screenId}`);
+      if (targetScreen) targetScreen.classList.add('hidden');
+      switchTab('account');
+    }
+
+    // Category Filter Handler
+    function filterCategory(catKey, btn) {
+      playBeep(650);
+      state.activeCategory = catKey;
+      document.querySelectorAll('.cat-pill').forEach(b => {
+        b.className = 'cat-pill px-3 py-1.5 rounded-full bg-brand-card border border-brand-border text-slate-300 font-bold whitespace-nowrap flex items-center gap-1';
+      });
+      btn.className = 'cat-pill px-3 py-1.5 rounded-full gold-gradient-bg text-slate-950 font-black whitespace-nowrap shadow flex items-center gap-1';
+      const catTitle = document.getElementById('activeCategoryTitle');
+      if (catTitle) catTitle.innerText = `${catKey.toUpperCase()} GAMES`;
+      renderGameRoster(catKey);
+    }
+
+    function renderGameRoster(catKey) {
+      const container = document.getElementById('gameRosterGrid');
+      if (!container) return;
+      const games = gamesDatabase[catKey] || gamesDatabase['popular'];
+
+      container.innerHTML = games.map(game => {
+        const clickAction = game.playable 
+          ? `openGame('${game.playable}')`
+          : `showToast('Loading ${game.name} lobby...')`;
+
+        return `
+          <div onclick="${clickAction}" class="bg-brand-card border border-brand-border hover:border-amber-400/60 rounded-2xl p-3 cursor-pointer transition active:scale-95 shadow">
+            <span class="bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[9px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider">${game.badge}</span>
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr ${game.color} flex items-center justify-center text-white my-2 shadow">
+              <i class="ph ${game.icon} text-xl"></i>
+            </div>
+            <h4 class="font-black text-sm text-white truncate">${game.name}</h4>
+            <p class="text-[10px] text-slate-400 mt-0.5 truncate">${game.tag}</p>
+            <div class="mt-2 flex items-center justify-between text-[11px]">
+              <span class="text-amber-400 font-bold">Play</span>
+              <span class="bg-brand-surface px-2 py-0.5 rounded text-[10px] text-slate-300 font-mono">Launch &gt;</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ================= DYNAMIC UPI QR & 1-TAP APP SYSTEM =================
+    let qrTimerInterval = null;
+    let activeDepositOrderId = 'LW984210';
+    let activeDepositAmt = 500;
+
+    function openDepositModal() {
+      document.getElementById('depositModal').classList.remove('hidden');
+    }
+    function closeDepositModal() {
+      document.getElementById('depositModal').classList.add('hidden');
+    }
+    function selectDepositAmt(amt) {
+      document.getElementById('customDepositInput').value = amt;
+      document.getElementById('depSubmitAmtDisplay').innerText = amt;
+      activeDepositAmt = amt;
+    }
+
+    const customDepEl = document.getElementById('customDepositInput');
+    if (customDepEl) {
+      customDepEl.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value) || 0;
+        document.getElementById('depSubmitAmtDisplay').innerText = val;
+        activeDepositAmt = val;
+      });
+    }
+
+    function proceedToPaymentGateway() {
+      const inputEl = document.getElementById('customDepositInput');
+      const amt = parseFloat(inputEl ? inputEl.value : 500);
+      if (!amt || amt < 100) return showToast('Minimum deposit is ₹100');
+      closeDepositModal();
+
+      activeDepositAmt = amt;
+      activeDepositOrderId = `LW${Math.floor(100000 + Math.random() * 900000)}`;
+      document.getElementById('cashierOrderId').innerText = activeDepositOrderId;
+      document.getElementById('cashierTotalAmtDisplay').innerText = `₹${amt.toFixed(2)}`;
+
+      // Generate standard UPI URI with paytm.s2xraax@pty & Legacy Win
+      const upiUrl = `upi://pay?pa=${encodeURIComponent(MERCHANT_CONFIG.upiId)}&pn=${encodeURIComponent(MERCHANT_CONFIG.merchantName)}&am=${amt.toFixed(2)}&cu=INR&tn=${encodeURIComponent('DEP_' + activeDepositOrderId)}`;
+      const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(upiUrl)}&margin=6`;
+      document.getElementById('cashierQrImg').src = qrApiUrl;
+
+      // 5-minute countdown timer
+      let timeLeft = 300;
+      if (qrTimerInterval) clearInterval(qrTimerInterval);
+      qrTimerInterval = setInterval(() => {
+        timeLeft--;
+        if (timeLeft <= 0) {
+          clearInterval(qrTimerInterval);
+          closeCashierModal();
+          showToast('Payment QR expired. Please create a new deposit order.');
+          return;
+        }
+        const m = Math.floor(timeLeft / 60);
+        const s = timeLeft % 60;
+        const timerEl = document.getElementById('qrCountdownTimer');
+        if (timerEl) timerEl.innerText = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+      }, 1000);
+
+      document.getElementById('cashierModal').classList.remove('hidden');
+    }
+
+    function closeCashierModal() {
+      if (qrTimerInterval) clearInterval(qrTimerInterval);
+      document.getElementById('cashierModal').classList.add('hidden');
+    }
+
+    // Direct 1-Tap UPI Intent App Launcher supporting PhonePe, Paytm, GPay, Supermoney, BharatPe, CRED, and BHIM
+    function launchUpiIntent(appScheme) {
+      const pa = MERCHANT_CONFIG.upiId;
+      const pn = encodeURIComponent(MERCHANT_CONFIG.merchantName);
+      const am = activeDepositAmt.toFixed(2);
+      const tn = encodeURIComponent(`DEP_${activeDepositOrderId}`);
+      const baseParams = `pa=${pa}&pn=${pn}&am=${am}&cu=INR&tn=${tn}`;
+      const isAndroid = /android/i.test(navigator.userAgent);
+
+      const appPackages = {
+        phonepe: { scheme: `phonepe://pay?${baseParams}`, pkg: 'com.phonepe.app' },
+        paytm: { scheme: `paytmmp://pay?${baseParams}`, pkg: 'net.one97.paytm' },
+        gpay: { scheme: `gpay://upi/pay?${baseParams}`, pkg: 'com.google.android.apps.nbu.paisa.user' },
+        supermoney: { scheme: `supermoney://pay?${baseParams}`, pkg: 'money.super.app' },
+        bharatpe: { scheme: `bharatpe://pay?${baseParams}`, pkg: 'com.bharatpe.app' },
+        cred: { scheme: `cred://pay?${baseParams}`, pkg: 'com.dreamplug.androidapp' },
+        bhim: { scheme: `bhim://pay?${baseParams}`, pkg: 'in.org.npci.upiapp' },
+        upi: { scheme: `upi://pay?${baseParams}`, pkg: '' }
+      };
+
+      const selected = appPackages[appScheme] || appPackages.upi;
+      showToast(`Opening ${appScheme.toUpperCase()} with ₹${am}...`);
+
+      if (isAndroid && selected.pkg) {
+        const intentUrl = `intent://pay?${baseParams}#Intent;scheme=upi;package=${selected.pkg};end`;
+        window.location.href = intentUrl;
+        setTimeout(() => {
+          window.location.href = selected.scheme;
+        }, 500);
+      } else {
+        window.location.href = selected.scheme;
+        setTimeout(() => {
+          window.location.href = `upi://pay?${baseParams}`;
+        }, 700);
+      }
+    }
+
+    // Allows user to load a custom real static QR image if supplied
+    function uploadCustomQr(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('cashierQrImg').src = e.target.result;
+          showToast('Custom static QR loaded successfully!');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function simulateDemoUtr() {
+      const randomUtr = `427${Math.floor(100000000 + Math.random() * 900000000)}`;
+      document.getElementById('utrNumberInput').value = randomUtr;
+      showToast('Sample UTR auto-filled!');
+    }
+
+    function confirmDepositUTR() {
+      const utr = document.getElementById('utrNumberInput').value.trim();
+      const amt = activeDepositAmt;
+      if (utr.length < 10) return showToast('Please enter a valid 12-digit UTR Ref number');
+
+      closeCashierModal();
+      state.balance += amt;
+      updateBalanceUI();
+      addTransaction(`UPI Recharge to ${MERCHANT_CONFIG.upiId} (UTR: ${utr})`, amt, 'credit');
+      playBeep(880, 'triangle', 0.3);
+      showToast(`Success! ₹${amt} verified and credited to balance.`);
+      document.getElementById('utrNumberInput').value = '';
+    }
+
+    // ================= WITHDRAWAL SYSTEM =================
+    function openWithdrawModal() {
+      updateBalanceUI();
+      document.getElementById('withdrawModal').classList.remove('hidden');
+    }
+    function closeWithdrawModal() {
+      document.getElementById('withdrawModal').classList.add('hidden');
+    }
+    function processWithdrawal() {
+      const inputEl = document.getElementById('withdrawAmountInput');
+      const amt = parseFloat(inputEl ? inputEl.value : 0);
+      if (isNaN(amt) || amt < 110) return showToast('Minimum withdrawal is ₹110');
+      if (amt > state.balance) return showToast('Insufficient wallet balance');
+
+      state.balance -= amt;
+      updateBalanceUI();
+      addTransaction(`Withdrawal to Bank/UPI`, amt, 'debit');
+      closeWithdrawModal();
+      playBeep(350, 'sine', 0.2);
+      showToast(`Withdrawal of ₹${amt} submitted! Bank transfer in progress.`);
+    }
+
+    function saveBankDetails() {
+      playBeep(700);
+      showToast('Bank and UPI details bound successfully!');
+      closeSubScreen('bank');
+    }
+
+    function claimVipBonus(amt, btn) {
+      state.balance += amt;
+      updateBalanceUI();
+      addTransaction(`VIP Privilege Reward`, amt, 'credit');
+      btn.disabled = true;
+      btn.innerText = 'Claimed';
+      btn.className = 'px-3 py-1.5 bg-slate-800 text-slate-500 rounded-lg text-xs';
+      showToast(`Claimed ₹${amt} VIP Bonus!`);
+    }
+
+    function claimAttendance() {
+      state.balance += 15.00;
+      updateBalanceUI();
+      addTransaction('Daily Attendance Bonus', 15.00, 'credit');
+      const btn = document.getElementById('attendanceClaimBtn');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerText = 'Claimed';
+        btn.classList.replace('gold-gradient-bg', 'bg-slate-700');
+      }
+      showToast('Claimed ₹15 Attendance Bonus!');
+    }
+
+    function redeemGiftCode() {
+      const code = document.getElementById('giftCodeInput').value.trim().toUpperCase();
+      if (code === 'BDG2026' || code === 'VIP500') {
+        const bonus = code === 'VIP500' ? 500.00 : 100.00;
+        state.balance += bonus;
+        updateBalanceUI();
+        addTransaction(`Gift Code (${code})`, bonus, 'credit');
+        showToast(`Promo code redeemed! ₹${bonus} added to wallet.`);
+        document.getElementById('giftCodeInput').value = '';
+      } else {
+        showToast('Invalid or expired gift code. Try BDG2026 or VIP500');
+      }
+    }
+
+    function copyReferralLink() {
+      copyToClipboard(document.getElementById('refLinkInput').value);
+    }
+
+    function shareInviteLink() {
+      copyReferralLink();
+      state.freeSpins += 2;
+      document.getElementById('freeSpinsCount').innerText = state.freeSpins;
+      showToast('Invitation shared! +2 Free Spins added.');
+    }
+
+    function refreshBalanceAction() {
+      playBeep(650);
+      updateBalanceUI();
+      showToast('Wallet balance refreshed.');
+    }
+
+    function openNotificationModal() {
+      showToast('Platform Notice: VIP daily cash rebate has been credited to your UID!');
+    }
+
+    // ================= 24/7 TELEGRAM & CUSTOMER SUPPORT SYSTEM =================
+    function launchTelegramDirect(channelUsername = 'LegacyWin_Recharge_Desk') {
+      playBeep(700);
+      showToast(`Opening Telegram: @${channelUsername}...`);
+      
+      const appUrl = `tg://resolve?domain=${channelUsername}`;
+      const webUrl = `https://t.me/${channelUsername}`;
+
+      try {
+        window.open(webUrl, '_blank');
+      } catch (e) {
+        window.location.href = appUrl;
+      }
+    }
+
+    function generateAndCopyTelegramTicket() {
+      const utr = document.getElementById('supportUtrInput').value.trim();
+      if (!utr || utr.length < 10) {
+        return showToast('Please enter your 12-digit UTR first!');
+      }
+
+      const ticketText = `📋 [LEGACY WIN RECHARGE DISPUTE]\n• User ID: 2257948\n• Merchant UPI: ${MERCHANT_CONFIG.upiId}\n• UTR Number: ${utr}\n• Amount: ₹${activeDepositAmt}\n• Problem: Payment completed to ${MERCHANT_CONFIG.upiId}, balance not reflected.\n• Time: ${new Date().toLocaleTimeString()}\nPlease verify and credit my wallet.`;
+      
+      copyToClipboard(ticketText);
+      showToast('Dispute text copied! Paste it in Telegram to our agent.');
+    }
+
+    function sendUtrToTelegramDirect() {
+      const utr = document.getElementById('supportUtrInput').value.trim();
+      if (!utr || utr.length < 10) {
+        return showToast('Please enter your 12-digit UTR first!');
+      }
+
+      generateAndCopyTelegramTicket();
+      setTimeout(() => {
+        launchTelegramDirect('LegacyWin_Recharge_Desk');
+      }, 500);
+    }
+
+    function openLiveChatModal() {
+      playBeep(550);
+      document.getElementById('liveChatModal').classList.remove('hidden');
+    }
+
+    function closeLiveChatModal() {
+      document.getElementById('liveChatModal').classList.add('hidden');
+    }
+
+    function sendPresetChat(msg) {
+      document.getElementById('chatMessageInput').value = msg;
+      sendUserChatMessage();
+    }
+
+    function sendUserChatMessage() {
+      const input = document.getElementById('chatMessageInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const container = document.getElementById('liveChatMessages');
+
+      const userBubble = document.createElement('div');
+      userBubble.className = 'flex items-start justify-end gap-2';
+      userBubble.innerHTML = `
+        <div class="bg-sky-600 text-white p-3 rounded-2xl rounded-tr-none max-w-[82%] shadow text-right">
+          <p>${escapeHtml(text)}</p>
+          <span class="text-[9px] text-sky-200 block text-right mt-1">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+        </div>
+      `;
+      container.appendChild(userBubble);
+      input.value = '';
+      container.scrollTop = container.scrollHeight;
+      playBeep(600, 'sine', 0.08);
+
+      const typing = document.getElementById('chatTypingIndicator');
+      typing.classList.remove('hidden');
+      typing.classList.add('flex');
+
+      setTimeout(() => {
+        typing.classList.add('hidden');
+        typing.classList.remove('flex');
+
+        let reply = "Thank you for reaching out! We are checking your UID: 2257948. If this is regarding a pending recharge, please provide your 12-digit UTR.";
+        const lower = text.toLowerCase();
+        
+        if (lower.includes('recharge') || lower.includes('utr') || lower.includes('deposit') || lower.includes('pending')) {
+          reply = `Ticket #${Math.floor(100000 + Math.random()*900000)} generated. Your payment to ${MERCHANT_CONFIG.upiId} is being audited with the bank gateway. You can also forward your UTR directly to @LegacyWin_Recharge_Desk on Telegram!`;
+        } else if (lower.includes('withdraw') || lower.includes('bank')) {
+          reply = "Withdrawals are processed via automated IMPS within 10 to 45 minutes. Please verify your bound IFSC code and Bank Account number in the Bank section.";
+        } else if (lower.includes('gift') || lower.includes('code') || lower.includes('prediction')) {
+          reply = "Today's VIP promo codes are released on our official Telegram channel: @LegacyWin_Official_Channel. You can also try code 'BDG2026' for ₹100 instant bonus!";
+        }
+
+        const agentBubble = document.createElement('div');
+        agentBubble.className = 'flex items-start gap-2';
+        agentBubble.innerHTML = `
+          <div class="w-6 h-6 rounded-full bg-sky-500 text-slate-950 font-black text-[10px] flex items-center justify-center flex-shrink-0 mt-1">CS</div>
+          <div class="bg-brand-card border border-brand-border p-3 rounded-2xl rounded-tl-none max-w-[82%] text-slate-200 space-y-1 shadow">
+            <span class="text-[10px] font-black text-amber-400 block">Agent Priya</span>
+            <p>${reply}</p>
+            <span class="text-[9px] text-slate-500 block text-right">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+          </div>
+        `;
+        container.appendChild(agentBubble);
+        container.scrollTop = container.scrollHeight;
+        playBeep(880, 'triangle', 0.15);
+      }, 1200);
+    }
+
+    function escapeHtml(string) {
+      return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+        return {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;',
+          '/': '&#x2F;',
+          '`': '&#x60;',
+          '=': '&#x3D;'
+        }[s];
+      });
+    }
+
+    // ================= MODAL MINI-GAMES CONTROLLER =================
+    function openGame(gameKey) {
+      playBeep(450);
+      state.activeGame = gameKey;
+      document.getElementById(`gameModal-${gameKey}`).classList.remove('hidden');
+      if (gameKey === 'mines') initMines();
+      if (gameKey === 'aviator') startAviatorEngine();
+      updateBalanceUI();
+    }
+    function closeGame(gameKey) {
+      document.getElementById(`gameModal-${gameKey}`).classList.add('hidden');
+      state.activeGame = null;
+    }
+
+    // 1. WIN GO ENGINE & INTERACTIVE BET SLIP
+    let wingoTime = 30;
+    let wingoPeriod = 2026092601;
+    let pendingBet = { type: null, choice: null, mult: 2, chip: 10, qty: 1 };
+    let activeWingoPlacedBet = null;
+
+    setInterval(() => {
+      wingoTime--;
+      if (wingoTime <= 0) {
+        resolveWingoDraw();
+        wingoTime = 30;
+      }
+      const el = document.getElementById('wingoTimer');
+      if (el) el.innerText = `00:${wingoTime < 10 ? '0' : ''}${wingoTime}`;
+    }, 1000);
+
+    function openBetSlip(type, choice, mult) {
+      pendingBet.type = type;
+      pendingBet.choice = choice;
+      pendingBet.mult = mult;
+      pendingBet.chip = 10;
+      pendingBet.qty = 1;
+
+      document.getElementById('betSlipTarget').innerText = `${choice}`;
+      document.getElementById('betSlipMult').innerText = `${mult}x`;
+      document.getElementById('betSlipQuantity').innerText = '1';
+      document.getElementById('betSlipTotalDisplay').innerText = '10.00';
+
+      document.getElementById('betSlipModal').classList.remove('hidden');
+    }
+
+    function closeBetSlip() {
+      document.getElementById('betSlipModal').classList.add('hidden');
+    }
+
+    function selectChip(amount, btn) {
+      pendingBet.chip = amount;
+      document.querySelectorAll('.chip-btn').forEach(b => {
+        b.className = 'chip-btn py-1.5 rounded-lg bg-brand-surface border border-brand-border text-slate-300';
+      });
+      btn.className = 'chip-btn py-1.5 rounded-lg border-2 border-amber-400 bg-amber-500/10 text-amber-300';
+      updateBetSlipTotal();
+    }
+
+    function adjustQuantity(delta) {
+      pendingBet.qty = Math.max(1, pendingBet.qty + delta);
+      document.getElementById('betSlipQuantity').innerText = pendingBet.qty;
+      updateBetSlipTotal();
+    }
+
+    function updateBetSlipTotal() {
+      const total = pendingBet.chip * pendingBet.qty;
+      document.getElementById('betSlipTotalDisplay').innerText = total.toFixed(2);
+    }
+
+    function confirmWingoBet() {
+      const totalBet = pendingBet.chip * pendingBet.qty;
+      if (state.balance < totalBet) return showToast('Insufficient wallet balance');
+
+      state.balance -= totalBet;
+      updateBalanceUI();
+
+      activeWingoPlacedBet = {
+        type: pendingBet.type,
+        choice: pendingBet.choice,
+        mult: pendingBet.mult,
+        stake: totalBet
+      };
+
+      addTransaction(`Win Go Bet on [${pendingBet.choice}]`, totalBet, 'debit');
+      closeBetSlip();
+      playBeep(650);
+      showToast(`Bet ₹${totalBet} placed on ${pendingBet.choice} for Period ${wingoPeriod}!`);
+    }
+
+    function resolveWingoDraw() {
+      const num = Math.floor(Math.random() * 10);
+      const size = num >= 5 ? 'Big' : 'Small';
+      let color = num % 2 === 0 ? 'Red' : 'Green';
+      if (num === 0 || num === 5) color = 'Violet';
+
+      if (activeWingoPlacedBet) {
+        let won = false;
+        if (activeWingoPlacedBet.type === 'color' && (activeWingoPlacedBet.choice === color || (color === 'Violet' && (activeWingoPlacedBet.choice === 'Red' || activeWingoPlacedBet.choice === 'Green')))) {
+          won = true;
+        } else if (activeWingoPlacedBet.type === 'number' && parseInt(activeWingoPlacedBet.choice) === num) {
+          won = true;
+        } else if (activeWingoPlacedBet.type === 'size' && activeWingoPlacedBet.choice === size) {
+          won = true;
+        }
+
+        const payout = won ? (activeWingoPlacedBet.stake * activeWingoPlacedBet.mult) : 0;
+        if (won) {
+          state.balance += payout;
+          updateBalanceUI();
+          addTransaction(`Win Go Win (Round ${wingoPeriod})`, payout, 'credit');
+          playBeep(880, 'triangle', 0.4);
+          showToast(`🎉 Round Won! Outcome ${num} (${color}). Payout: ₹${payout.toFixed(2)}`);
+        }
+
+        state.betHistory.unshift({
+          game: 'Win Go 1M',
+          select: String(activeWingoPlacedBet.choice),
+          bet: activeWingoPlacedBet.stake,
+          payout: payout,
+          status: won ? 'WIN' : 'LOST'
+        });
+        activeWingoPlacedBet = null;
+      }
+
+      wingoPeriod++;
+      const periodEl = document.getElementById('wingoPeriodId');
+      if (periodEl) periodEl.innerText = wingoPeriod;
+
+      const tbody = document.getElementById('wingoHistoryBody');
+      if (tbody) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="py-1.5">${wingoPeriod - 1}</td>
+          <td class="font-bold text-amber-300 font-mono">${num}</td>
+          <td>${size}</td>
+          <td class="${color === 'Red' ? 'text-rose-400' : color === 'Green' ? 'text-emerald-400' : 'text-purple-400'} font-black">${color}</td>
+        `;
+        tbody.prepend(tr);
+        if (tbody.children.length > 6) tbody.removeChild(tbody.lastChild);
+      }
+    }
+
+    // 2. AVIATOR CRASH ENGINE
+    let aviatorInterval = null;
+    let aviatorMult = 1.00;
+    let aviatorIsFlying = false;
+    let aviatorHasBet = false;
+    let aviatorCrashPoint = 2.0;
+
+    function adjustAviatorBet(delta) {
+      const input = document.getElementById('aviatorBetInput');
+      let val = Math.max(10, parseInt(input.value) + delta);
+      input.value = val;
+      if (!aviatorHasBet) document.getElementById('aviatorActionBtn').innerText = `PLACE BET (₹${val})`;
+    }
+
+    function handleAviatorAction() {
+      const bet = parseInt(document.getElementById('aviatorBetInput').value);
+      const btn = document.getElementById('aviatorActionBtn');
+
+      if (!aviatorHasBet && !aviatorIsFlying) {
+        if (state.balance < bet) return showToast('Insufficient balance');
+        state.balance -= bet;
+        updateBalanceUI();
+        addTransaction('Aviator Bet', bet, 'debit');
+        aviatorHasBet = true;
+        btn.innerText = 'WAITING FOR TAKEOFF...';
+        btn.className = 'w-full py-3.5 rounded-xl bg-amber-500 text-slate-950 font-black text-sm uppercase tracking-wider';
+      } else if (aviatorHasBet && aviatorIsFlying) {
+        const winAmt = bet * aviatorMult;
+        state.balance += winAmt;
+        updateBalanceUI();
+        addTransaction(`Aviator Cashed Out @ ${aviatorMult.toFixed(2)}x`, winAmt, 'credit');
+        state.betHistory.unshift({
+          game: 'Aviator',
+          select: `${aviatorMult.toFixed(2)}x`,
+          bet: bet,
+          payout: winAmt,
+          status: 'WIN'
+        });
+        aviatorHasBet = false;
+        playBeep(880, 'triangle', 0.25);
+        showToast(`Cashed out ₹${winAmt.toFixed(2)} at ${aviatorMult.toFixed(2)}x!`);
+        btn.innerText = 'CASHED OUT';
+        btn.className = 'w-full py-3.5 rounded-xl bg-slate-700 text-slate-400 font-black text-sm uppercase';
+      }
+    }
+
+    function startAviatorEngine() {
+      if (aviatorInterval) clearInterval(aviatorInterval);
+      const canvas = document.getElementById('aviatorCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      aviatorInterval = setInterval(() => {
+        if (!aviatorIsFlying) {
+          aviatorIsFlying = true;
+          aviatorMult = 1.00;
+          aviatorCrashPoint = (1.15 + Math.random() * 4.8).toFixed(2);
+          document.getElementById('aviatorStatusSubtext').innerText = 'Plane is climbing...';
+          const btn = document.getElementById('aviatorActionBtn');
+          if (aviatorHasBet) {
+            btn.innerText = 'CASH OUT NOW';
+            btn.className = 'w-full py-3.5 rounded-xl bg-amber-400 text-slate-950 font-black text-sm uppercase animate-pulse';
+          }
+        } else {
+          aviatorMult += 0.04;
+          document.getElementById('aviatorMultiplierText').innerText = `${aviatorMult.toFixed(2)}x`;
+
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          
+          ctx.strokeStyle = '#1e2436';
+          ctx.lineWidth = 1;
+          for (let y = 30; y < canvas.height; y += 40) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(canvas.width, y);
+            ctx.stroke();
+          }
+
+          ctx.beginPath();
+          ctx.strokeStyle = '#ef4444';
+          ctx.lineWidth = 4;
+          ctx.moveTo(10, canvas.height - 10);
+          const progress = Math.min(canvas.width - 40, (aviatorMult - 1.0) * 80);
+          const curveY = canvas.height - 10 - Math.pow(progress / 22, 1.8);
+          ctx.lineTo(10 + progress, curveY);
+          ctx.stroke();
+
+          ctx.fillStyle = '#ff4d4f';
+          ctx.shadowColor = '#ef4444';
+          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          ctx.arc(10 + progress, curveY, 6, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.shadowBlur = 0;
+
+          if (aviatorMult >= aviatorCrashPoint) {
+            aviatorIsFlying = false;
+            document.getElementById('aviatorMultiplierText').innerText = 'FLEW AWAY!';
+            document.getElementById('aviatorStatusSubtext').innerText = `Crashed at ${aviatorCrashPoint}x`;
+            const btn = document.getElementById('aviatorActionBtn');
+            const bet = parseInt(document.getElementById('aviatorBetInput').value);
+            btn.innerText = `PLACE BET (₹${bet})`;
+            btn.className = 'w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-sm uppercase';
+
+            const ribbon = document.getElementById('aviatorHistoryRibbon');
+            if (ribbon) {
+              const badge = document.createElement('span');
+              badge.className = `px-2 py-0.5 rounded-full ${aviatorCrashPoint > 2 ? 'bg-purple-950/80 text-purple-400 border border-purple-500/40' : 'bg-blue-950/80 text-blue-400 border border-blue-500/40'}`;
+              badge.innerText = `${aviatorCrashPoint}x`;
+              ribbon.prepend(badge);
+            }
+
+            if (aviatorHasBet) {
+              state.betHistory.unshift({
+                game: 'Aviator',
+                select: 'Crash',
+                bet: bet,
+                payout: 0,
+                status: 'LOST'
+              });
+              aviatorHasBet = false;
+            }
+          }
+        }
+      }, 140);
+    }
+
+    // 3. MINES ENGINE
+    let minesActive = false;
+    let minesData = [];
+    let revealedGems = 0;
+
+    function initMines() {
+      const grid = document.getElementById('minesGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      for (let i = 0; i < 25; i++) {
+        const btn = document.createElement('button');
+        btn.id = `mine-tile-${i}`;
+        btn.className = 'bg-brand-surface hover:bg-slate-800 rounded-xl border border-brand-border flex items-center justify-center text-xl transition-all shadow';
+        btn.innerHTML = '<span class="w-2.5 h-2.5 rounded-full bg-slate-700"></span>';
+        btn.onclick = () => revealMineTile(i, btn);
+        grid.appendChild(btn);
+      }
+    }
+
+    function startOrCashoutMines() {
+      const btn = document.getElementById('minesActionBtn');
+      const bet = parseInt(document.getElementById('minesBetInput').value);
+
+      if (!minesActive) {
+        if (state.balance < bet) return showToast('Insufficient balance');
+        state.balance -= bet;
+        updateBalanceUI();
+        addTransaction('Mines Game Start', bet, 'debit');
+
+        minesActive = true;
+        revealedGems = 0;
+        initMines();
+
+        minesData = Array(25).fill('gem');
+        const numBombs = parseInt(document.getElementById('minesCountSelect').value);
+        let placed = 0;
+        while (placed < numBombs) {
+          const idx = Math.floor(Math.random() * 25);
+          if (minesData[idx] !== 'bomb') {
+            minesData[idx] = 'bomb';
+            placed++;
+          }
+        }
+
+        btn.innerText = 'CASHOUT (₹0.00)';
+        btn.className = 'w-full py-3 rounded-xl bg-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider shadow';
+      } else {
+        const mult = 1 + revealedGems * 0.45;
+        const win = bet * mult;
+        state.balance += win;
+        updateBalanceUI();
+        addTransaction(`Mines Win (${mult.toFixed(2)}x)`, win, 'credit');
+        state.betHistory.unshift({
+          game: 'Mines 5x5',
+          select: `${revealedGems} Gems`,
+          bet: bet,
+          payout: win,
+          status: 'WIN'
+        });
+        showToast(`Won ₹${win.toFixed(2)}!`);
+        minesActive = false;
+        btn.innerText = `START GAME (₹${bet})`;
+        btn.className = 'w-full py-3 rounded-xl gold-gradient-bg text-slate-950 font-black text-xs uppercase tracking-wider shadow';
+      }
+    }
+
+    function revealMineTile(index, btn) {
+      if (!minesActive) return;
+      if (btn.disabled) return;
+
+      btn.disabled = true;
+      if (minesData[index] === 'bomb') {
+        btn.innerHTML = '💣';
+        btn.classList.add('bg-rose-950', 'border-rose-500');
+        showToast('Boom! You hit a mine.');
+        minesActive = false;
+        const bet = parseInt(document.getElementById('minesBetInput').value);
+        state.betHistory.unshift({
+          game: 'Mines 5x5',
+          select: 'Bomb',
+          bet: bet,
+          payout: 0,
+          status: 'LOST'
+        });
+        const actionBtn = document.getElementById('minesActionBtn');
+        actionBtn.innerText = `START GAME (₹${bet})`;
+        actionBtn.className = 'w-full py-3 rounded-xl gold-gradient-bg text-slate-950 font-black text-xs uppercase tracking-wider shadow';
+        playBeep(200, 'sawtooth', 0.4);
+      } else {
+        btn.innerHTML = '💎';
+        btn.classList.add('bg-sky-950', 'border-sky-500');
+        revealedGems++;
+        playBeep(650, 'sine', 0.1);
+        const bet = parseInt(document.getElementById('minesBetInput').value);
+        const currentWin = bet * (1 + revealedGems * 0.45);
+        document.getElementById('minesActionBtn').innerText = `CASHOUT (₹${currentWin.toFixed(2)})`;
+      }
+    }
+
+    function autoPickSafeMinesTile() {
+      if (!minesActive) return showToast('Please start game first');
+      const unpicked = [];
+      for (let i = 0; i < 25; i++) {
+        const tile = document.getElementById(`mine-tile-${i}`);
+        if (tile && !tile.disabled) unpicked.push(i);
+      }
+      if (unpicked.length > 0) {
+        const randIdx = unpicked[Math.floor(Math.random() * unpicked.length)];
+        const btn = document.getElementById(`mine-tile-${randIdx}`);
+        revealMineTile(randIdx, btn);
+      }
+    }
+
+    // 4. FORTUNE 777 SLOTS ENGINE
+    const slotSymbols = ['🍒', '🔔', '🍋', '🍇', '💎', '7️⃣'];
+    function spinSlotsMachine() {
+      const bet = 20;
+      if (state.balance < bet) return showToast('Insufficient balance for spin');
+      state.balance -= bet;
+      updateBalanceUI();
+      addTransaction('777 Slot Spin', bet, 'debit');
+
+      const s1 = slotSymbols[Math.floor(Math.random() * slotSymbols.length)];
+      const s2 = slotSymbols[Math.floor(Math.random() * slotSymbols.length)];
+      const s3 = slotSymbols[Math.floor(Math.random() * slotSymbols.length)];
+
+      const r1 = document.getElementById('reel1');
+      const r2 = document.getElementById('reel2');
+      const r3 = document.getElementById('reel3');
+
+      r1.classList.add('spinning-reel');
+      r2.classList.add('spinning-reel');
+      r3.classList.add('spinning-reel');
+
+      r1.innerText = '🌀';
+      r2.innerText = '🌀';
+      r3.innerText = '🌀';
+      playBeep(700, 'square', 0.3);
+
+      setTimeout(() => {
+        r1.classList.remove('spinning-reel');
+        r2.classList.remove('spinning-reel');
+        r3.classList.remove('spinning-reel');
+
+        r1.innerText = s1;
+        r2.innerText = s2;
+        r3.innerText = s3;
+
+        let won = false;
+        let win = 0;
+        if (s1 === s2 && s2 === s3) {
+          won = true;
+          win = s1 === '7️⃣' ? 1000 : 250;
+          state.balance += win;
+          updateBalanceUI();
+          addTransaction(`777 Jackpot (${s1})`, win, 'credit');
+          document.getElementById('slotsResultText').innerText = `JACKPOT WIN ₹${win}! 🎉`;
+          playBeep(880, 'triangle', 0.5);
+        } else {
+          document.getElementById('slotsResultText').innerText = 'Better luck next spin!';
+        }
+
+        state.betHistory.unshift({
+          game: 'Fortune 777',
+          select: `${s1}-${s2}-${s3}`,
+          bet: bet,
+          payout: win,
+          status: won ? 'WIN' : 'LOST'
+        });
+      }, 600);
+    }
+
+    // 5. DRAGON VS TIGER ENGINE
+    function placeDragonTigerBet(choice, mult) {
+      const bet = 20;
+      if (state.balance < bet) return showToast('Insufficient wallet balance');
+
+      state.balance -= bet;
+      updateBalanceUI();
+      addTransaction(`Dragon Tiger Bet [${choice}]`, bet, 'debit');
+
+      const cards = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+      const values = { 'A': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, 'J': 11, 'Q': 12, 'K': 13 };
+
+      const dCard = cards[Math.floor(Math.random() * cards.length)];
+      const tCard = cards[Math.floor(Math.random() * cards.length)];
+
+      const dVal = values[dCard];
+      const tVal = values[tCard];
+
+      document.getElementById('dragonCardDisplay').innerText = '🂠';
+      document.getElementById('tigerCardDisplay').innerText = '🂠';
+      document.getElementById('dtResultBanner').innerText = 'Dealing duel cards...';
+
+      setTimeout(() => {
+        document.getElementById('dragonCardDisplay').innerText = dCard;
+        document.getElementById('tigerCardDisplay').innerText = tCard;
+        document.getElementById('dragonScore').innerText = `Val: ${dVal}`;
+        document.getElementById('tigerScore').innerText = `Val: ${tVal}`;
+
+        let winner = 'Tie';
+        if (dVal > tVal) winner = 'Dragon';
+        else if (tVal > dVal) winner = 'Tiger';
+
+        const won = (choice === winner);
+        const payout = won ? (bet * mult) : 0;
+
+        if (won) {
+          state.balance += payout;
+          updateBalanceUI();
+          addTransaction(`Dragon Tiger Win (${winner})`, payout, 'credit');
+          playBeep(880, 'triangle', 0.3);
+          document.getElementById('dtResultBanner').innerText = `🎉 You Won! ${winner} beats! Payout ₹${payout}`;
+          showToast(`Won ₹${payout} on ${winner}!`);
+        } else {
+          document.getElementById('dtResultBanner').innerText = `${winner} Won! Better luck next turn.`;
+        }
+
+        state.betHistory.unshift({
+          game: 'Dragon vs Tiger',
+          select: choice,
+          bet: bet,
+          payout: payout,
+          status: won ? 'WIN' : 'LOST'
+        });
+      }, 700);
+    }
+
+    // ================= SPIN WHEEL CANVAS SYSTEM =================
+    const wheelSegments = ['₹0.50', '₹1.00', '₹2.50', '₹5.00', '₹0.20', '₹10.00', '₹1.50', '₹0.80'];
+    const wheelColors = ['#f59e0b', '#1e2030', '#ffd700', '#1e2030', '#f59e0b', '#1e2030', '#ffd700', '#1e2030'];
+    let wheelAngle = 0;
+
+    function drawAccumulatorWheel() {
+      const canvas = document.getElementById('wheelCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const numSegments = wheelSegments.length;
+      const arc = (2 * Math.PI) / numSegments;
+
+      ctx.clearRect(0, 0, 250, 250);
+      for (let i = 0; i < numSegments; i++) {
+        const angle = i * arc;
+        ctx.beginPath();
+        ctx.fillStyle = wheelColors[i];
+        ctx.moveTo(125, 125);
+        ctx.arc(125, 125, 120, angle, angle + arc);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.save();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.translate(125 + Math.cos(angle + arc / 2) * 80, 125 + Math.sin(angle + arc / 2) * 80);
+        ctx.rotate(angle + arc / 2 + Math.PI / 2);
+        ctx.fillText(wheelSegments[i], -ctx.measureText(wheelSegments[i]).width / 2, 0);
+        ctx.restore();
+      }
+    }
+
+    function spinAccumulatorWheel() {
+      if (state.freeSpins <= 0) return showToast('No spins left! Invite friends for +2 spins.');
+      state.freeSpins--;
+      document.getElementById('freeSpinsCount').innerText = state.freeSpins;
+
+      const canvas = document.getElementById('wheelCanvas');
+      const addRotations = 5 * 360 + Math.floor(Math.random() * 360);
+      wheelAngle += addRotations;
+      canvas.style.transform = `rotate(${wheelAngle}deg)`;
+
+      playBeep(520, 'sine', 1.0);
+      setTimeout(() => {
+        const prize = 1.25;
+        state.wheelProgress += prize;
+        if (state.wheelProgress >= 500) {
+          state.wheelProgress = 500;
+          state.balance += 500;
+          updateBalanceUI();
+          addTransaction('₹500 Wheel Cashout Completed', 500, 'credit');
+          showToast('🎉 CONGRATULATIONS! ₹500 added directly to wallet!');
+        } else {
+          showToast(`Won ₹${prize} towards ₹500 payout!`);
+        }
+        document.getElementById('wheelProgressText').innerText = `₹${state.wheelProgress.toFixed(2)} / ₹500.00`;
+        document.getElementById('wheelProgressBar').style.width = `${(state.wheelProgress / 500) * 100}%`;
+      }, 4100);
+    }
+
+    // Auto-carousel timer
+    let currentSlide = 0;
+    setInterval(() => {
+      currentSlide = (currentSlide + 1) % 3;
+      const carousel = document.getElementById('bannerCarousel');
+      if (carousel) carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+      const dots = document.getElementById('carouselDots');
+      if (dots) {
+        Array.from(dots.children).forEach((dot, idx) => {
+          dot.className = idx === currentSlide ? 'w-3 h-1 rounded-full bg-amber-400 transition-all' : 'w-1.5 h-1 rounded-full bg-slate-500 transition-all';
+        });
+      }
+    }, 3800);
+
+    // Initializer on window load
+    window.addEventListener('DOMContentLoaded', () => {
+      renderGameRoster('popular');
+      updateBalanceUI();
+      renderHistory();
+      renderBetRecords();
+      drawAccumulatorWheel();
+    });
+  </script>
+</body>
+</html>
